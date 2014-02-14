@@ -1,4 +1,5 @@
 <?php
+require_once '../base.inc.php';
 
 /**
  * DAO de la taula permisos
@@ -31,17 +32,26 @@ class PermisosDAO {
    
     //Insert or update a record into the DB
    function save(&$vo) {
-       //TODO
+       // TODO:
    }
 
-   //Get a record from de DB
-   function get($idRepo,$idRol) {
-       //TODO
+   /*
+    * Donat un idRepo i un idRol, retorna -si existeix  la DB- un objecte de tipus Permis
+    */
+   public function get($idRepo,$idRol) {
+       // TODO: provar
+       /* Generem la query usant constants */
+       $sql = "SELECT * FROM " + CTPermisos::NAME_T_PERMISOS +
+               " WHERE " + CTPermisos::NAME_COL_IDREPO + "= $idRepo" +
+               " AND " + CTPermisos::NAME_COL_IDROL + " = $idRol";
+       
+       /* Executem la query i retornem el resultat */
+       return $this->execute($sql);
    }
 
    //Remove a record form DB
    function delete(&$vo) {
-        //TODO
+        // TODO:
    }
 
 }
