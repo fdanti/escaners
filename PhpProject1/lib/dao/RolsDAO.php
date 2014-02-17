@@ -55,10 +55,22 @@ class RolsDAO {
     /*
      * Donat un id, retorna -si existeix la DB- un objecte de tipus Rol
      */
-    public function get($id) {
+    public function getByID($id) {
         /* Generem la query usant constants */
         $sql = "SELECT * FROM " + CTRols::NAME_TABLE +
                 " WHERE " + CTRols::NAME_COL_ID + "= $id";
+
+        /* Executem la query i retornem el resultat */
+        return $this->execute($sql);
+    }
+    
+    /*
+     * Donat un ldapname, retorna -si existeix la DB- un objecte de tipus Rol
+     */
+    public function getByLDAPname($name) {
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM " + CTRols::NAME_TABLE +
+                " WHERE " + CTRols::NAME_COL_LDAPNAME + "= $name";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
