@@ -23,23 +23,23 @@ class RepositorisDAO {
        $result = mysql_query($sql, $this->conn) 
                or die (myql_error());
        
-       /* Si obtenim resultats de la query, posem-los en un VO de tipus Permisos */
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
        if (mysql_num_rows($result) > 0) {
            for ($i = 0; $i < mysql_num_rows($result); $i++) {
                $row = mysql_fetch_assoc($result);
-               $repositori[$i] = new Repositori(); //TODO: omple el constructor
+               $repositori[$i] = new Repositori($row[ipScan], $row[nom], $row[notes]);
            }
        }
        return $repositori;
    }
    
     /*
-     * Donat un objecte de tipus Permis, l'afegeix a la taula corresponent de la DB
+     * Donat un objecte de tipus Repositori, l'afegeix a la taula corresponent de la DB
      */
     public function save(&$vo) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "INSERT INTO " + CTPermisos::NAME_T_PERMISOS +
+        $sql = "INSERT INTO " + CTRepos::NAME_TABLE +
                 " (" + CTPermisos::NAME_COL_IDREPO + ", " + CTPermisos::NAME_COL_IDROL + ")" +
                 " VALUES (" + $vo->getIdRepo() + ", " + $vo->getIdRol() +")";
 
