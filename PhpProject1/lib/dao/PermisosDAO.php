@@ -63,6 +63,16 @@ class PermisosDAO {
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
     }
+    
+    public function getByRol($idRol) {
+        // TODO: provar
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM " + CTPermisos::NAME_TABLE  +
+                " AND " + CTPermisos::NAME_COL_IDROL + " = $idRol";
+
+        /* Executem la query i retornem el resultat */
+        return $this->execute($sql);
+    }
 
     //Remove a record form DB
     //public function delete(&$vo) {
