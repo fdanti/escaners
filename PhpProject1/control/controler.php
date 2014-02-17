@@ -9,7 +9,7 @@ require_once '../base.inc.php';
 $ldapName = "test"; //TODO: això has de capturar-ho de les variables de la sessió
 
 
-/* Operatoria d'usuari */
+/* Comprovacions sobre l'usuari */
     //Creem un objecte de tipus RolsDAO
     $rolDAO = new RolsDAO();
 
@@ -21,15 +21,24 @@ $ldapName = "test"; //TODO: això has de capturar-ho de les variables de la sess
         $errorMsg = "Usuari sense autorització al portal";
         $errorAllowed = 1;
     } else {
-        /* Si el ROL és admin, fem el include de la part de admins */
-        if ( $user->getIsAdmin() ) {
-             include '../view/admin_view.php';
-        }
+        
     }
-
-    /* */
     
+/* Altres comprovacions */    
 
+/* Control dels errors */
+    //TODO: implementa control sobre els altres possibles errors
+if ( $errorAlolowed ) {
+    echo $errorMsg;
+    exit;        
+}
+
+/* Si no hi ha cap error, mostra la vista que toca */   
+    if ( $user->getIsAdmin() ) {    /* ROL és admin */
+         include 'admin_controler.php';
+    } else {                        /* ROL NO és admin */
+         include 'user_controler.php';
+    }
 
 
 
