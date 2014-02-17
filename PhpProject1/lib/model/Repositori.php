@@ -12,7 +12,8 @@ class Repositori {
     private $notes;     //Opcional
     
     /* Constructor de la classe */
-    function __construct($ipScan, $nom, $notes = "") {
+    function __construct($id = "", $ipScan, $nom, $notes = "") {
+        $this->id = $id;
         $this->ipScan = $ipScan;
         $this->nom = $nom;
         $this->notes = $notes;

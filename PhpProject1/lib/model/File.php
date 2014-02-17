@@ -12,7 +12,8 @@ class File {
     private $creationDate;
     
     /* Constructor de la classe */
-    function __construct($name, $idRepo, $creationDate) {
+    function __construct($id = "", $name, $idRepo, $creationDate) {
+        $this->id = $id;
         $this->name = $name;
         $this->idRepo = $idRepo;
         $this->creationDate = $creationDate;

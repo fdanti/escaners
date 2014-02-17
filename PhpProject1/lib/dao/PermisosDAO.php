@@ -12,7 +12,7 @@ class PermisosDAO {
     protected $db;
     
     /* Constructor de PermisosDAO. Crea la connexió */
-    public function PermisosDAO() {
+    public function __construct() {
         //TODO: repassa constructor
         //TODO: connexió persistent o no? Estudiar-ho
         $this->conn = mysql_connect(ConfigDB::HOST, ConfigDB::USER,
@@ -29,7 +29,8 @@ class PermisosDAO {
        if (mysql_num_rows($result) > 0) {
            for ($i = 0; $i < mysql_num_rows($result); $i++) {
                $row = mysql_fetch_assoc($result);
-               $permis[$i] = new Permis($row[idRepo], $row[idRol]);
+               $permis[$i] = new Permis($row[CTPermisos::NAME_COL_IDREPO],
+                       $row[CTPermisos::NAME_COL_IDROL]);
            }
        }
        return $permis;
@@ -41,7 +42,7 @@ class PermisosDAO {
     public function save(&$vo) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "INSERT INTO " + CTPermisos::NAME_T_PERMISOS +
+        $sql = "INSERT INTO " + CTPermisos::NAME_TABLE  +
                 " (" + CTPermisos::NAME_COL_IDREPO + ", " + CTPermisos::NAME_COL_IDROL + ")" +
                 " VALUES (" + $vo->getIdRepo() + ", " + $vo->getIdRol() +")";
 
@@ -55,7 +56,7 @@ class PermisosDAO {
     public function get($idRepo,$idRol) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM " + CTPermisos::NAME_T_PERMISOS +
+        $sql = "SELECT * FROM " + CTPermisos::NAME_TABLE  +
                 " WHERE " + CTPermisos::NAME_COL_IDREPO + "= $idRepo" +
                 " AND " + CTPermisos::NAME_COL_IDROL + " = $idRol";
 

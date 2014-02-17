@@ -13,7 +13,8 @@ class Rol {
     private $isAdmin;
     
     /* Constructor de la classe */
-    public function __construct($ldapName, $shownName, $isGroup, $isAdmin) {
+    public function __construct($id = "", $ldapName, $shownName, $isGroup, $isAdmin) {
+        $this->id =$id;
         $this->ldapName = $ldapName;
         $this->shownName = $shownName;
         $this->isGroup = $isGroup;

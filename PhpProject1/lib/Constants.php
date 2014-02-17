@@ -11,7 +11,7 @@ class OtherConstants {
  * Constants (ctt) de la taula permisos
  */
 class CTPermisos {  
-    const NAME_TAB_PERMISOS   = "permisos"; //Nom de la Taula de Permisos
+    const NAME_TABLE        = "permisos"; //Nom de la Taula de Permisos
     const NAME_COL_IDREPO   = "idRepo";     //Columna idRepo
     const NAME_COL_IDROL    = "idRol";      //Columna idRol
 }
@@ -20,8 +20,8 @@ class CTPermisos {
  * Constants (ctt) de la taula rols
  */
 class CTRols {
-    const NAME_TAB_ROLS     = "rols";       //Nom de la Taula de Rols
-    const NAME_COL_IDROL    = "id";         //Columna idRol
+    const NAME_TABLE        = "rols";       //Nom de la Taula de Rols
+    const NAME_COL_ID    = "id";         //Columna idRol
     const NAME_COL_ISGROUP  = "isGroup";
     const NAME_COL_LDAPNAME = "ldapname";
     const NAME_COL_SHOWNAME = "showname";
