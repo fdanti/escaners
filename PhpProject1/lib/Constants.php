@@ -7,7 +7,7 @@ class OtherConstants {
     
 }
 
-class CTPermisos {
+class CTPermisos {  //Constants (ctt) permisos
     const NAME_TAB_PERMISOS   = "Permisos"; //Nom de la Taula de Permisos
     const NAME_COL_IDREPO   = "idRepo";     //Columna idRepo
     const NAME_COL_IDROL    = "idRol";      //Columna idRol

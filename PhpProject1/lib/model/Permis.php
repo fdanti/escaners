@@ -10,21 +10,12 @@ class Permis {
     protected $idRol;  //Foreign key a Rol.id
     
     /* Constructor de la classe */
-    public function Permis($idRepo, $idRol) {
+    public function __construct($idRepo, $idRol) {
         $this->idRepo = $idRepo;
         $this->idRol = $idRol;
     }
     
-    /* innecessaris si usem constructor 
-        public function setIdRepo($id) {
-            $this->idRepo = $id;
-        }
-
-        public function setIdRol($id) {
-            $this->idRol = $id;
-        }    
-    */
-    
+    /* Getters auto-generats */
     public function getIdRepo() {
         return $this->idRepo;
     }

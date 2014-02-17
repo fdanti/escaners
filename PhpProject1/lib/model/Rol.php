@@ -1,16 +1,48 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of rol
+ * Classe que conté la informació d'un usuari o grup d'usuaris
  *
  * @author fdanti
  */
 class Rol {
-    //put your code here
+    private $id;            //Autoincrement, Primary key
+    private $ldapName;    //Unike key
+    private $shownName;
+    private $isGroup;
+    private $isAdmin;
+    
+    /* Constructor de la classe */
+    public function __construct($ldapName, $shownName, $isGroup, $isAdmin) {
+        $this->ldapName = $ldapName;
+        $this->shownName = $shownName;
+        $this->isGroup = $isGroup;
+        $this->isAdmin = $isAdmin;
+    }
+    
+    /* Getters auto-generats */
+    public function getLdapName() {
+        return $this->ldapName;
+    }
+    
+    public function getIdRol() {
+        return $this->idRol;
+    }   
+    
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getShownName() {
+        return $this->shownName;
+    }
+
+    public function getIsGroup() {
+        return $this->isGroup;
+    }
+
+    public function getIsAdmin() {
+        return $this->isAdmin;
+    }
+
 }
