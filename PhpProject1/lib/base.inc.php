@@ -4,12 +4,17 @@
  * inclourà els includes bàsics per tots els PHP del projecte
  */
 
-require_once 'config.inc.php';
-require_once 'Constants.php';
+require_once 'lib/Constants.php';
 
-require_once 'dao/*.php';
-require_once 'logic/*.php';
-require_once 'model/*.php';
+require_once 'lib/dao/FilesDAO.php';
+require_once 'lib/dao/PermisosDAO.php';
+require_once 'lib/dao/RepositorisDAO.php';
+require_once 'lib/dao/RolsDAO.php';
+require_once 'lib/logic/EscanersLogic.php';
+require_once 'lib/model/File.php';
+require_once 'lib/model/Permis.php';
+require_once 'lib/model/Repositori.php';
+require_once 'lib/model/Rol.php';
 
 
 /* 

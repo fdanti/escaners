@@ -1,6 +1,6 @@
 <?php
-require_once '../base.inc.php';
-require_once '../config.inc.php';
+#require_once '../base.inc.php';
+#require_once '../config.inc.php';
 
 /**
  * DAO de la taula Repositoris 
@@ -17,19 +17,20 @@ class RepositorisDAO {
         //TODO: connexió persistent o no? Estudiar-ho
         $this->conn = mysql_connect(ConfigDB::HOST, ConfigDB::USER,
                ConfigDB::PWD, ConfigDB::DB );
-        $this->db = mysq_select_db();
+        $this->db = mysql_select_db(ConfigDB::DB);
    }
 
     /* Executa la SQLquery i retorna un array associatiu amb els resultats */
     protected function execute($sql) {
        $result = mysql_query($sql, $this->conn) 
-               or die (myql_error());
+               or die (mysql_error());
        
        /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
        if (mysql_num_rows($result) > 0) {
            for ($i = 0; $i < mysql_num_rows($result); $i++) {
                $row = mysql_fetch_assoc($result);
-               $repositori[$i] = new Repositori($row[CTRepos::NAME_COL_IPSCAN],
+               $repositori[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
+                            $row[CTRepos::NAME_COL_IPSCAN],
                             $row[CTRepos::NAME_COL_NOM],
                             $row[CTRepos::NAME_COL_NOTES]);
            }
@@ -57,8 +58,7 @@ class RepositorisDAO {
     public function get($id) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM " + CTRepos::NAME_TABLE +
-                " WHERE " + CTRepos::NAME_COL_ID + "= $id";
+        $sql = "SELECT * FROM ".CTRepos::NAME_TABLE." WHERE ".CTRepos::NAME_COL_ID."= $id";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);

@@ -1,6 +1,7 @@
 <?php
-require_once '../base.inc.php';
-require_once '../config.inc.php';
+
+#require_once '../base.inc.php';
+#require_once '../config.inc.php';
 
 /**
  * DAO de la taula permisos
@@ -17,13 +18,13 @@ class PermisosDAO {
         //TODO: connexió persistent o no? Estudiar-ho
         $this->conn = mysql_connect(ConfigDB::HOST, ConfigDB::USER,
                ConfigDB::PWD, ConfigDB::DB );
-        $this->db = mysq_select_db();
+        $this->db = mysql_select_db(ConfigDB::DB);
    }
 
     /* Executa la SQLquery i retorna un array associatiu amb els resultats */
     protected function execute($sql) {
        $result = mysql_query($sql, $this->conn) 
-               or die (myql_error());
+               or die (mysql_error());
        
        /* Si obtenim resultats de la query, posem-los en un VO de tipus Permisos */
        if (mysql_num_rows($result) > 0) {
@@ -67,8 +68,7 @@ class PermisosDAO {
     public function getByRol($idRol) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM " + CTPermisos::NAME_TABLE  +
-                " AND " + CTPermisos::NAME_COL_IDROL + " = $idRol";
+        $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE." WHERE ".CTPermisos::NAME_COL_IDROL." = $idRol";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);

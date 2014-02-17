@@ -1,6 +1,6 @@
 <?php
-require_once '../base.inc.php';
-require_once '../config.inc.php';
+#require_once '../base.inc.php';
+#require_once '../config.inc.php';
 
 /**
  * DAO de la taula rols
