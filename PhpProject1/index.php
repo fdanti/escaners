@@ -2,17 +2,22 @@
 
 <?php
     require_once './lib/base.inc.php';
-    $con_permis = new PermisosDAO();
-    $con_repos = new RepositorisDAO();
-    
-    $permisos=$con_permis->getByRol(1);
-    
-    $i=0;
-    foreach($permisos as $permis){
-        $repositoris[$i]=$con_repos->get($permis->getIdRepo());
-        $i++;
+
+    if(!isset($_GET['idrepo'])){
+        $idrepo=0;
+    }else{
+        $idrepo=$_GET['idrepo'];
     }
     
+    $con_permis = new PermisosDAO();
+    
+    $consulta=$con_permis->getByRol(1);
+    
+    $permisos=$consulta[0];
+    $repositoris=$consulta[1];
+
+    
+    $isadmin=1;
 ?>
 
 <html>
@@ -20,22 +25,54 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/main.css" type="text/css">
         <title>Servidor d'escaneig de la UB</title>
+        <script src="./jquery/jquery-1.11.0.js"></script>
+        <script lang="javascript">
+            $(document).ready(function() {
+                <?php if(!$isadmin){?>
+                $("#inforepo").load("./inforepo.php?idrepo=<?php echo $repositoris[0]->getId();?>");
+                $("#content").load("./content.php?idrepo=<?php echo $repositoris[0]->getId();?>");
+                <?php }else{ ?>
+                $("#admin").load("./admin/index.php");
+                <?php }?>
+            });
+            
+            function carrega(){
+                <?php if(!$isadmin){?>
+                var seleccio = document.getElementById("selectrep");
+                var id = seleccio.options[seleccio.selectedIndex].value;
+                $("#inforepo").load("./inforepo.php?idrepo="+id);
+                $("#content").load("./content.php?idrepo="+id);
+                <?php }else{ ?>
+                $("#admin").load("./admin/index.php");
+                <?php }?>
+            }
+            
+            <?php if($isadmin){?>
+            function admin(num){
+                if(num==1){
+                    $("#contentadmin").load("./admin/add.php");
+                }
+            }
+            <?php }?>
+        </script>
     </head>
     <body>
         <div id="head" name=""head>
+            <p style="text-align: right"><img src="./img/ub.jpg" style="height: 80px;" /></p>
             <h1>Servidor d'escaneig de la UB</h1>
             <h2>Benvingut, pepito.</h2>
+<?php if(!$isadmin){?>
             <table>
                 <tr>
                     <td style="font-weight: bold;">Unitats a les que tens accés: </td>
                     <td>
                         <?php
                         if(sizeof($repositoris)>0){?>
-                            <select>
+                        <select id="selectrep" name="selectrep" onchange="carrega();">
                             <?php
                             foreach($repositoris as $repositori){
                             ?>
-                            <option><?php echo $repositori[0]->getNom();?></option>
+                                <option value="<?php echo $repositori->getId();?>"><?php echo $repositori->getNom();?></option>
                             <?php    
                             }
                             ?>
@@ -46,10 +83,12 @@
                     </td>
                 </tr>
             </table>
+            <div id="inforepo" name="inforepo"></div>
+        </div>   
+        <div id="content" name="content"></div>
+<?php }else{?>   
         </div>
-        
-        <div id="content" name="content">
-            
-        </div>
+        <div id="admin" name="admin"></div>
+<?php }?>
     </body>
 </html>

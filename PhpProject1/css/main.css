@@ -14,10 +14,41 @@ h1{
 }
 
 h2{
-    text-align: right;
     font-size: 120%;
+}
+
+#head h2{
+    text-align: right;
+}
+
+td{
+    vertical-align:top;
 }
 
 #head{
     border: thin solid #000000;
+    padding: 10px;
+    padding-right: 40px;
+}
+
+#content,#contentadmin{
+    border: thin solid #000000;
+    margin-top:25px;
+    padding:30px;
+}
+
+#admin{
+    margin-top:25px;
+    padding-top:0px;
+}
+
+#menu td{
+    text-align: center;
+    background-color: #CCCCFF;
+    border: thin solid #000000;
+    cursor:pointer;
+}
+
+#menu td:hover{
+    background-color: #AAAAFF;
 }

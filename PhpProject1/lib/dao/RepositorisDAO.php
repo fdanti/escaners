@@ -25,17 +25,7 @@ class RepositorisDAO {
        $result = mysql_query($sql, $this->conn) 
                or die (mysql_error());
        
-       /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
-       if (mysql_num_rows($result) > 0) {
-           for ($i = 0; $i < mysql_num_rows($result); $i++) {
-               $row = mysql_fetch_assoc($result);
-               $repositori[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
-                            $row[CTRepos::NAME_COL_IPSCAN],
-                            $row[CTRepos::NAME_COL_NOM],
-                            $row[CTRepos::NAME_COL_NOTES]);
-           }
-       }
-       return $repositori;
+       return $result;
    }
    
     /*
@@ -59,9 +49,17 @@ class RepositorisDAO {
         // TODO: provar
         /* Generem la query usant constants */
         $sql = "SELECT * FROM ".CTRepos::NAME_TABLE." WHERE ".CTRepos::NAME_COL_ID."= $id";
-
-        /* Executem la query i retornem el resultat */
-        return $this->execute($sql);
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
+       if (mysql_num_rows($result) > 0) {
+            $row = mysql_fetch_assoc($result);
+            $repositori = new Repositori($row[CTRepos::NAME_COL_ID], 
+                         $row[CTRepos::NAME_COL_IPSCAN],
+                         $row[CTRepos::NAME_COL_NOM],
+                         $row[CTRepos::NAME_COL_NOTES]);
+       }
+       
+       return $repositori;
     }
 
     //Remove a record form DB

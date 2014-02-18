@@ -26,15 +26,7 @@ class PermisosDAO {
        $result = mysql_query($sql, $this->conn) 
                or die (mysql_error());
        
-       /* Si obtenim resultats de la query, posem-los en un VO de tipus Permisos */
-       if (mysql_num_rows($result) > 0) {
-           for ($i = 0; $i < mysql_num_rows($result); $i++) {
-               $row = mysql_fetch_assoc($result);
-               $permis[$i] = new Permis($row[CTPermisos::NAME_COL_IDREPO],
-                       $row[CTPermisos::NAME_COL_IDROL]);
-           }
-       }
-       return $permis;
+       return $result;
    }
    
     /*
@@ -68,10 +60,28 @@ class PermisosDAO {
     public function getByRol($idRol) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE." WHERE ".CTPermisos::NAME_COL_IDROL." = $idRol";
+        $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE." INNER JOIN ".  CTRepos::NAME_TABLE." ON ".CTPermisos::NAME_TABLE.".".CTPermisos::NAME_COL_IDREPO."=".CTRepos::NAME_TABLE.".".CTRepos::NAME_COL_ID." WHERE ".CTPermisos::NAME_COL_IDROL." = $idRol";
 
         /* Executem la query i retornem el resultat */
-        return $this->execute($sql);
+        $result=$this->execute($sql);
+        
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Permisos */
+       if (mysql_num_rows($result) > 0) {
+           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+               $row = mysql_fetch_assoc($result);
+               $permis[$i] = new Permis($row[CTPermisos::NAME_COL_IDREPO],
+                       $row[CTPermisos::NAME_COL_IDROL]);
+               $repo[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
+                            $row[CTRepos::NAME_COL_IPSCAN],
+                            $row[CTRepos::NAME_COL_NOM],
+                            $row[CTRepos::NAME_COL_NOTES]);
+           }
+       }
+       
+       $retorn[0]=$permis;
+       $retorn[1]=$repo;
+       
+       return $retorn;
     }
 
     //Remove a record form DB
