@@ -1,8 +1,9 @@
 
-/ 		codi a mostrar a l'usuari
-/lib/		Conte base.inc.php amb els includes bàsics
+/           Codi a mostrar a l'usuari
+/lib/       Conte base.inc.php amb els includes bàsics
 		      config.inc.php amb les dades de DB, tipus de DB, etc. Exemple en: http://www.achievo.org/wiki/Achievo/Manual/Installation/Configuration/config.inc.php
-/lib/dao	codi relacionat amb la interacció amb les taules de la DB
-/lib/model	codi dels Value Object (classe dels elements de les diferents taules)
-/lib/logic	codi de les classes de business logic (funcions que gestionen com es fan les coses)
-/control	codi que fa el control de l'arribada de paràmetres i interacció amb la business logic
+/lib/dao    codi relacionat amb la interacció amb les taules de la DB
+/lib/model  codi dels Value Object (classe dels elements de les diferents taules)
+/lib/logic  codi de les classes de business logic (funcions que gestionen com es fan les coses)
+/control    codi que fa el control de l'arribada de paràmetres i interacció amb la business logic
+/view       Codi de Vista
