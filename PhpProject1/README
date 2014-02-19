@@ -7,3 +7,5 @@
 /lib/logic  codi de les classes de business logic (funcions que gestionen com es fan les coses)
 /control    codi que fa el control de l'arribada de paràmetres i interacció amb la business logic
 /view       Codi de Vista
+
+//TODO: documenta totes les carpetes que facis!
