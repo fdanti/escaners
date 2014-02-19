@@ -12,3 +12,5 @@
 /lib/jquery llibreria jquery de javascript
 /control    codi que fa el control de l'arribada de paràmetres i interacció amb la business logic
 /view       Codi de Vista
+
+//TODO: documenta totes les carpetes que facis!
