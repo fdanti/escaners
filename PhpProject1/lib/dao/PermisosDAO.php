@@ -35,9 +35,9 @@ class PermisosDAO {
     public function save(&$vo) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "INSERT INTO " + CTPermisos::NAME_TABLE  +
-                " (" + CTPermisos::NAME_COL_IDREPO + ", " + CTPermisos::NAME_COL_IDROL + ")" +
-                " VALUES (" + $vo->getIdRepo() + ", " + $vo->getIdRol() +")";
+        $sql = "INSERT INTO ".CTPermisos::NAME_TABLE.
+                " (".CTPermisos::NAME_COL_IDREPO.", ".CTPermisos::NAME_COL_IDROL.")".
+                " VALUES (".$vo->getIdRepo().", ".$vo->getIdRol().")";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
@@ -49,9 +49,9 @@ class PermisosDAO {
     public function get($idRepo,$idRol) {
         // TODO: provar
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM " + CTPermisos::NAME_TABLE  +
-                " WHERE " + CTPermisos::NAME_COL_IDREPO + "= $idRepo" +
-                " AND " + CTPermisos::NAME_COL_IDROL + " = $idRol";
+        $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE .
+                " WHERE ".CTPermisos::NAME_COL_IDREPO."= $idRepo".
+                " AND ".CTPermisos::NAME_COL_IDROL." = $idRol";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
@@ -83,10 +83,44 @@ class PermisosDAO {
        
        return $retorn;
     }
+    
+    public function getByRepo($idRepo) {
+        // TODO: provar
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE." INNER JOIN ".  CTRols::NAME_TABLE." ON ".CTPermisos::NAME_TABLE.".".CTPermisos::NAME_COL_IDROL."=".CTROLS::NAME_TABLE.".".CTRols::NAME_COL_ID." WHERE ".CTPermisos::NAME_COL_IDREPO." = $idRepo";
+
+        /* Executem la query i retornem el resultat */
+        $result=$this->execute($sql);
+        
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Permisos */
+       if (mysql_num_rows($result) > 0) {
+           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+               $row = mysql_fetch_assoc($result);
+               $permis[$i] = new Permis($row[CTPermisos::NAME_COL_IDREPO],
+                       $row[CTPermisos::NAME_COL_IDROL]);
+               $rol[$i] = new Rol($row[CTRols::NAME_COL_ID], 
+                            $row[CTRols::NAME_COL_LDAPNAME],
+                            $row[CTRols::NAME_COL_SHOWNAME],
+                            $row[CTRols::NAME_COL_ISGROUP],
+                            $row[CTRols::NAME_COL_ISADMIN]);
+           }
+        $retorn[0]=$permis;
+        $retorn[1]=$rol;
+        
+        return $retorn;
+       }else{
+           return null;
+       }
+    }
 
     //Remove a record form DB
-    //public function delete(&$vo) {
-    // // TODO: implementar PermisosDAO.delete()
-    //}
+    public function delete(&$vo) {
+        /* Generem la query usant constants */
+
+        $sql = "DELETE FROM ".CTPermisos::NAME_TABLE." WHERE ".CTPermisos::NAME_COL_IDREPO."=".$vo->getIdRepo()." AND ".CTPermisos::NAME_COL_IDROL."=".$vo->getIdRol();
+
+        /* Executem la query i retornem el resultat */
+        return $this->execute($sql);
+    }
 
 }

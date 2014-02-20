@@ -25,11 +25,7 @@ class Rol {
     public function getLdapName() {
         return $this->ldapName;
     }
-    
-    public function getIdRol() {
-        return $this->idRol;
-    }   
-    
+       
     public function getId() {
         return $this->id;
     }

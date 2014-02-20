@@ -37,3 +37,14 @@ CREATE TABLE `files` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_files_repositori` FOREIGN KEY (`idRepo`) REFERENCES `repositori` (`idRepo`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/* Afegit per avilalta el 20/2/14. Altero una taula ja creada. En un futur es pot fer un merge amb la creació i no haver de fer l'alter*/
+
+ALTER TABLE `escaners`.`permisos` 
+DROP FOREIGN KEY `fk_permisos_repositori`;
+ALTER TABLE `escaners`.`permisos` 
+ADD CONSTRAINT `fk_permisos_repositori`
+  FOREIGN KEY (`repositori_id`)
+  REFERENCES `escaners`.`repositori` (`idRepo`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
