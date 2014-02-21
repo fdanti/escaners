@@ -1,0 +1,100 @@
+Instal·Lo el mysql:
+  apt-get install mysql-server mysql-client
+  Faig temporalment: root mysql password = qwe123
+
+Instal·lo el pure-ftpd amb mysql support
+  apt-get install pure-ftpd-mysql
+
+Creo usuari 'pureftpd' i DB 'ftpusers' al MySQL
+  $> mysql -u root -p
+  CREATE DATABASE ftpusers;
+  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON ftpusers.* TO 'pureftpd'@'localhost' IDENTIFIED BY 'aGd2;k3.J';
+  #NO#GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON ftpusers.* TO 'pureftpd'@'localhost.localdomain' IDENTIFIED BY 'aGd2;k3.J';
+  FLUSH PRIVILEGES;
+
+Creo taula d'usuaris ftp amb les següents particularitats:
+  ·Auto_increment de la columna Uid a partir del uid 2000
+  ·El Gid per defecte serà 100 (users)
+  ·ipaccess per defecte serà 161.116.0.0/16
+  ·ULBandwidth i DLBandwidth serà 500KB/sec
+  ·QuotaSize (quota de disc): 1000Mb
+  ·QuotaFiles (numero de fitxers): 1000fitxers
+  
+  $> mysql -u root -p
+  USE ftpusers;
+  CREATE TABLE users (
+  User varchar(16) NOT NULL default '',
+  status enum('0','1') NOT NULL default '1',
+  Password varchar(64) NOT NULL default '',
+  Uid int(10) unsigned NOT NULL AUTO_INCREMENT,
+  Gid varchar(11) NOT NULL default '100',
+  Dir varchar(128) NOT NULL default '',
+  ULBandwidth smallint(5) NOT NULL default '500',
+  DLBandwidth smallint(5) NOT NULL default '500',
+  comment tinytext NOT NULL,
+  ipaccess varchar(15) NOT NULL default '161.116.0.0/16',
+  QuotaSize smallint(5) NOT NULL default '1000',
+  QuotaFiles int(11) NOT NULL default '1000',
+  PRIMARY KEY (Uid),
+  UNIQUE KEY Uid (Uid)
+  );  
+  ALTER TABLE users AUTO_INCREMENT = 2000;
+
+Modifico els fitxers de  config del pure-ftpd
+  Ajusto els codis del mysql en /etc/pure-ftpd/db/mysql.conf
+    MYSQLUser       pureftpd
+    MYSQLPassword   aGd2;k3.J
+    MYSQLDatabase   ftpusers
+    Deixem la resta de valors per defecte (a destacar que desem el password en cleartext)  
+  Deshabilito la autenticació per PAM
+    En el fitxer /etc/pure-ftpd/conf/PAMAuthentication poso un 'No'
+  Forço el chroot de tots els usuaris
+    Creo el fitxer /etc/pure-ftpd/conf/ChrootEveryone amb un 'Yes'
+  
+Reinicio el servei de pureFTP
+  /etc/init.d/pure-ftpd-mysql restart
+  
+Amb això, podriem crear un usuari de proves i provar de fer login:
+  $> mysql -u root -p
+  USE ftpusers;
+  INSERT INTO users (User, Password, Uid, QuotaSize, QuotaFiles) VALUES ('test','qwerty', '/tmp', 100, 100);  
+  ·Verifico que no puc fer login amb usuari del sistema (PAM)
+  ·Verifico que puc fer login com a usuari test i que entro a la carpeta /tmp.
+  
+A partir d'aquest moment, per poder fer un nou repositori seguint els següents passos:
+  ·Partirem de les dades que ens ha entregat l'usuari: $nomRepositori i $ipEscaner
+  ·Generem un $user i $pwd de forma semi-random
+  ·Creemm un espai de disc a tal efecte: $FOLDER = $PATH/$nomRepositori
+    mkdir $FOLDER
+  ·Insert a la taula ftpusers amb les dades necessàries:
+    INSERT INTO users (User, Password, Dir, ipaccess) VALUES ('$user','$pwd', '$FOLDER', '$ipEscanner');
+  ·Get del Uid autoassignat (Auto_increment)
+    $OWNER = SELECT Uid FROM users WHERE Dir = $FOLDER;
+  ·Assignar com a owner de la carpeta, el nou Uid
+    chown $OWNER $FOLDER
+    chmod 700 $FOLDER
+    
+Tests:
+INSERT INTO users (User, status, Password, Dir) VALUES ('gtr_1','1','qwerty', '/serveis/ftp/pu_gtr_1');
+mkdir /serveis/ftp/pu_gtr_1
+chown 2001 /serveis/ftp/pu_gtr_1
+chmod 700 /serveis/ftp/pu_gtr_1
+
+INSERT INTO users (User, status, Password, Dir) VALUES ('gtr_2','1','qwerty', '/serveis/ftp/pu_gtr_2');
+mkdir /serveis/ftp/pu_gtr_2
+chown 2001 /serveis/ftp/pu_gtr_2
+chmod 700 /serveis/ftp/pu_gtr_2
+
+Resultats: Totes les proves OK.
+
+Afegeixo limitació per ip, tot modificant el fitxer /etc/pure-ftpd/db/mysql.conf i afegint " AND ipaccess='\r'" a totes les sentències SQL
+  MYSQLGetUID     SELECT Uid FROM users WHERE User='\L' AND ipaccess='\R'
+  
+PENDENT:
+  ·NO APLICABLE PER EVITAR INCOMPATIBILITATS AMS ESCANNERS ANTICS: SSL/TLS [info: http://download.pureftpd.org/pure-ftpd/doc/README.TLS]
+  ·CAL VERIFICAR QUE NO ENTREM UN NOM DE REPOSITORI JA EXISTENT? O FEM A NIVELL DE TAULES?
+      Potser cal fer la columna Dir com a UNIQUE? Parlar-ho amb Enric/Albert
+  ·Verificar autenticació des de diferents IP. No es permeten rangs de IP!
+  
+
+
