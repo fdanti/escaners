@@ -1,6 +1,7 @@
 <div align="center">
     <h2>Afegir nou escàner</h2>
-    <form>
+    <div id="help"><p style="padding: 0px; margin:5px;">Introdueix a continuació les dades de l'escàner:</p></div>
+    <form id="form1" name="form1" method="POST"  onsubmit="return submitForm('add.php');">
         <table border="0">
             <tr>
                 <td align="right" style="padding-right: 30px;">Direcció ip de l'escàner:</td>
@@ -15,6 +16,6 @@
                 <td><textarea cols="32" rows="6" id='notes' name='notes' /></td>
             </tr>
         </table>
-        <input type="submit" value="Registrar" style="margin-top:20px; margin-left:200px;" />
+        <input id="submit" name="submit" type="submit" value="Registrar" style="margin-top:20px; margin-left:200px;" />
     </form>
 </div>

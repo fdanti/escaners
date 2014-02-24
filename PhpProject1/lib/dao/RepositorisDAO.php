@@ -32,11 +32,10 @@ class RepositorisDAO {
      * Donat un objecte de tipus Repositori, l'afegeix a la taula corresponent de la DB
      */
     public function save(&$vo) {
-        // TODO: provar
         /* Generem la query usant constants */
-        $sql = "INSERT INTO " + CTRepos::NAME_TABLE +
-                " (" + CTRepos::NAME_COL_IPSCAN + ", " + CTRepos::NAME_COL_NOM + ", " + CTRepos::NAME_COL_NOTES + ")" +
-                " VALUES (" + $vo->getIPscan() + ", " + $vo->getName() +", " + $vo->getNotes() +")";
+        $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
+                " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.")".
+                " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\")";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
@@ -61,10 +60,34 @@ class RepositorisDAO {
        
        return $repositori;
     }
+    
+    public function getAll() {
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM ".CTRepos::NAME_TABLE;
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
+        
+       if (mysql_num_rows($result) > 0) {
+           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+               $row = mysql_fetch_assoc($result);
+               $repositori[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
+                         $row[CTRepos::NAME_COL_IPSCAN],
+                         $row[CTRepos::NAME_COL_NOM],
+                         $row[CTRepos::NAME_COL_NOTES]);
+           }
+       }
+       
+       return $repositori;
+    }
 
     //Remove a record form DB
-    //public function delete(&$vo) {
-    // // TODO: implementar 
-    //}
+    public function delete(&$vo) {
+        /* Generem la query usant constants */
+
+        $sql = "DELETE FROM ".CTRepos::NAME_TABLE." WHERE idRepo=".$vo->getId();
+
+        /* Executem la query i retornem el resultat */
+        return $this->execute($sql);
+    }
 
 }

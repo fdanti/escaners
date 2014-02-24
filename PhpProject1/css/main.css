@@ -52,3 +52,28 @@ td{
 #menu td:hover{
     background-color: #AAAAFF;
 }
+
+#help, .help{
+    font-size:80%;  
+    width:100%;
+    background-color:#DDFFDD;
+    border-bottom: thin solid #444444;
+    border-top: thin solid #444444;
+    margin-bottom:1%;
+    color:#333333;
+}
+
+.llista{
+    margin-top:10px;
+    border: thin solid #000000;
+}
+
+.llista img{
+    cursor:pointer;
+}
+
+.desplegable{
+    width:80%;
+    border: thin solid #000000;
+    border-top:none;
+}

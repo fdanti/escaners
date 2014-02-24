@@ -20,7 +20,7 @@ class CTPermisos {
  * Constants (ctt) de la taula rols
  */
 class CTRols {
-    const NAME_TABLE        = "rols";       //Nom de la Taula de Rols
+    const NAME_TABLE        = "rol";       //Nom de la Taula de Rols
     const NAME_COL_ID    = "idRol";         //Columna idRol
     const NAME_COL_ISGROUP  = "isGroup";
     const NAME_COL_LDAPNAME = "ldapname";

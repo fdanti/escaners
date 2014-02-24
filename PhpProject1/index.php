@@ -25,7 +25,7 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/main.css" type="text/css">
         <title>Servidor d'escaneig de la UB</title>
-        <script src="./jquery/jquery-1.11.0.js"></script>
+        <script src="./lib/jquery/jquery-1.11.0.js"></script>
         <script lang="javascript">
             $(document).ready(function() {
                 <?php if(!$isadmin){?>
@@ -47,10 +47,52 @@
                 <?php }?>
             }
             
+            function carregaDiv(div,url){
+                $(div).load(url);
+            }
+            
+            function buidaDiv(div){
+                $(div).html("");
+            }
+            
             <?php if($isadmin){?>
             function admin(num){
                 if(num==1){
                     $("#contentadmin").load("./admin/add.php");
+                }else if(num==2){
+                    $("#contentadmin").load("./admin/edit.php");
+                }
+            }
+            
+            var ok=0;
+            function submitForm(desti,div,amaga) {
+                if(typeof(div)==='undefined') div="#help";
+                if(typeof(amaga)==='undefined') amaga=true;
+                //$('html, body').animate({scrollTop:0}, 'slow');
+                $.ajax({type:'POST', url: './admin/consultes/'+desti, data:$('#form1').serialize(), success: function(response) {
+                    $(div).html(response);
+                    if(amaga){
+                        $("#submit").attr("disabled", "disabled");
+                        if(ok==1){
+                                if(element=document.getElementById("form1")){
+                                        pare=element.parentNode;
+                                        pare.removeChild(element);
+                                }
+                        }
+                    }
+                }});
+
+                return false;
+            }
+            
+            function carregaDivDelete(div,url,referencia){
+                //document.getElementById(referencia+"titol").classList.add('seleccioelimina');
+                if(confirm("Segur que vols eliminar l'element seleccionat?'")){
+                        //$('html, body').animate({scrollTop:0}, 'slow');
+                        $(div).load(url);
+                        element=document.getElementById(referencia);
+                        pare=element.parentNode;
+                        pare.removeChild(element);
                 }
             }
             <?php }?>
