@@ -31,8 +31,9 @@ class RolsDAO {
                $rol[$i] = new Rol($row[CTRols::NAME_COL_ID], $row[CTRols::NAME_COL_LDAPNAME],
                        $row[CTRols::NAME_COL_SHOWNAME], $row[CTRols::NAME_COL_ISGROUP], $row[CTRols::NAME_COL_ISADMIN]);
            }
+           return $rol;
        }
-       return $rol;
+       return null;
    }
    
     /*
@@ -40,16 +41,28 @@ class RolsDAO {
      */
     public function save(&$vo) {
         /* Generem la query usant constants */
-        $sql = "INSERT INTO " + CTRol::NAME_TABLE +
-            " (" + CTRols::NAME_COL_LDAPNAME + ", " +
-                CTRols::NAME_COL_SHOWNAME + ", " +
-                CTRols::NAME_COL_ISADMIN + ", " +
-                CTRols::NAME_COL_ISGROUP + ")" +
-            " VALUES (" + $vo->getLdapName() + ", " + $vo->getShowName() +
-                ", " + $vo->getIsAdmin() + ", " + $vo->getIsGroup() + ")";
+        $sql = "INSERT INTO ".CTRol::NAME_TABLE.
+            " (".CTRols::NAME_COL_LDAPNAME.", ".
+                CTRols::NAME_COL_SHOWNAME.", ".
+                CTRols::NAME_COL_ISADMIN.", ".
+                CTRols::NAME_COL_ISGROUP.")".
+            " VALUES (".$vo->getLdapName().", ".$vo->getShowName().
+                ", ".$vo->getIsAdmin().", ".$vo->getIsGroup().")";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
+    }
+    
+    public function saveLdap(&$vo) {
+        /* Generem la query usant constants */
+        $sql = "INSERT IGNORE INTO ".CTRols::NAME_TABLE.
+            " (".CTRols::NAME_COL_LDAPNAME.")".
+            " VALUES (\"".$vo->getLdapName()."\")";
+
+        /* Executem la query i retornem el resultat */
+        $result = mysql_query($sql, $this->conn) 
+        or die (mysql_error());
+        return $result;
     }
 
     /*
@@ -79,5 +92,19 @@ class RolsDAO {
     public function getAll(){
         $sql = "SELECT * FROM ".CTRols::NAME_TABLE;
         return $this->execute($sql);
+    }
+    
+    public function getLast(){
+        $sql = "SELECT * FROM ".CTRols::NAME_TABLE." ORDER BY ".CTRols::NAME_COL_ID." DESC LIMIT 1";
+        $result = mysql_query($sql, $this->conn) 
+                or die (mysql_error());
+        
+       if (mysql_num_rows($result) > 0) {
+            $row = mysql_fetch_assoc($result);
+            echo $row[CTRols::NAME_COL_ID];
+            return $row[CTRols::NAME_COL_ID];
+       }else{
+            return null;
+       }
     }
 }
