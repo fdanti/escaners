@@ -1,3 +1,5 @@
+Passos seguits per crear un FTP amb usuaris virtuals gestionats a través d'una taula MySQL
+
 Instal·Lo el mysql:
   apt-get install mysql-server mysql-client
   Faig temporalment: root mysql password = qwe123
@@ -8,8 +10,8 @@ Instal·lo el pure-ftpd amb mysql support
 Creo usuari 'pureftpd' i DB 'ftpusers' al MySQL
   $> mysql -u root -p
   CREATE DATABASE ftpusers;
-  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON ftpusers.* TO 'pureftpd'@'localhost' IDENTIFIED BY 'aGd2;k3.J';
-  #NO#GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON ftpusers.* TO 'pureftpd'@'localhost.localdomain' IDENTIFIED BY 'aGd2;k3.J';
+  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON ftpusers.* TO
+            'pureftpd'@'localhost' IDENTIFIED BY 'aGd2;k3.J';
   FLUSH PRIVILEGES;
 
 Creo taula d'usuaris ftp amb les següents particularitats:
@@ -23,18 +25,18 @@ Creo taula d'usuaris ftp amb les següents particularitats:
   $> mysql -u root -p
   USE ftpusers;
   CREATE TABLE users (
-  User varchar(16) NOT NULL default '',
-  status enum('0','1') NOT NULL default '1',
-  Password varchar(64) NOT NULL default '',
-  Uid int(10) unsigned NOT NULL AUTO_INCREMENT,
-  Gid varchar(11) NOT NULL default '100',
-  Dir varchar(128) NOT NULL default '',
-  ULBandwidth smallint(5) NOT NULL default '500',
-  DLBandwidth smallint(5) NOT NULL default '500',
-  comment tinytext NOT NULL,
-  ipaccess varchar(15) NOT NULL default '161.116.0.0/16',
-  QuotaSize smallint(5) NOT NULL default '1000',
-  QuotaFiles int(11) NOT NULL default '1000',
+  `Uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `User` varchar(16) NOT NULL default '',
+  `Password` varchar(64) NOT NULL default '',
+  `status` enum('0','1') NOT NULL default '1',
+  `Gid` varchar(11) NOT NULL default '100',
+  `Dir` varchar(128) NOT NULL default '',
+  `ULBandwidth` smallint(5) NOT NULL default '500',
+  `DLBandwidth` smallint(5) NOT NULL default '500',
+  `comment` tinytext,
+  `ipaccess` varchar(15) NOT NULL default '161.116.0.0/16',
+  `QuotaSize` smallint(5) NOT NULL default '1000',
+  `QuotaFiles` int(11) NOT NULL default '1000',
   PRIMARY KEY (Uid),
   UNIQUE KEY Uid (Uid)
   );  
@@ -89,12 +91,30 @@ Resultats: Totes les proves OK.
 
 Afegeixo limitació per ip, tot modificant el fitxer /etc/pure-ftpd/db/mysql.conf i afegint " AND ipaccess='\r'" a totes les sentències SQL
   MYSQLGetUID     SELECT Uid FROM users WHERE User='\L' AND ipaccess='\R'
+
+
+Unió de les proves fetes amb la infraestructura de classes del projecte PHP:
+    -Taula users (pure-ftpd-mysql) -> rolFtp
+    
+    
+
+
+
+
+
+
+
+
+
+
+-ftpRols.User -> Uid
   
 PENDENT:
   ·NO APLICABLE PER EVITAR INCOMPATIBILITATS AMS ESCANNERS ANTICS: SSL/TLS [info: http://download.pureftpd.org/pure-ftpd/doc/README.TLS]
   ·CAL VERIFICAR QUE NO ENTREM UN NOM DE REPOSITORI JA EXISTENT? O FEM A NIVELL DE TAULES?
       Potser cal fer la columna Dir com a UNIQUE? Parlar-ho amb Enric/Albert
   ·Verificar autenticació des de diferents IP. No es permeten rangs de IP!
+  ·Verificar gestió de quotes. Funcionen? Cal activar alguna cosa? Recompilar?
   
 
 

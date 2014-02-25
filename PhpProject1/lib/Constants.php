@@ -29,6 +29,25 @@ class CTRols {
 }
 
 /*
+ * Constants (ctt) de la taula rolsFtp
+ */
+class CTRolsFtp {
+    const NAME_TABLE        = "rolFtp";       //Nom de la Taula de RolsFTP
+    const NAME_COL_ID       = "Uid";
+    const NAME_COL_USER     = "User";
+    const NAME_COL_PASSWORD = "Password";
+    const NAME_COL_STATUS   = "status";
+    const NAME_COL_GID      = "Gid";
+    const NAME_COL_DIR      = "Dir";
+    const NAME_COL_ULBANDWIDTH  = "ULBandwidth";
+    const NAME_COL_DLBANDWIDTH  = "DLBandwidth";
+    const NAME_COL_COMMENT      = "comment";
+    const NAME_COL_IPACCESS     = "ipaccess";
+    const NAME_COL_QUOTASIZE    = "QuotaSize";
+    const NAME_COL_QUOTAFILES   = "QuotaFiles";
+}
+
+/*
  * Constants (ctt) de la taula Repositoris
  */
 class CTRepos {
