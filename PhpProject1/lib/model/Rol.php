@@ -2,12 +2,13 @@
 
 /**
  * Classe que conté la informació d'un usuari o grup d'usuaris
+ *  Relacionada amb la taula users
  *
  * @author fdanti
  */
 class Rol {
     private $id;            //Autoincrement, Primary key
-    private $ldapName;    //Unike key
+    private $ldapName;      //Unike key
     private $shownName;
     private $isGroup;
     private $isAdmin;
