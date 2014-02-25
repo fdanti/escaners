@@ -16,6 +16,7 @@ class RolsFtpDAO {
                ConfigDB::PWD, ConfigDB::DB );
         $this->db = mysql_select_db(ConfigDB::DB);
    }
+   
     /* Executa la SQLquery i retorna un array associatiu amb els resultats */
     protected function execute($sql) {
        $result = mysql_query($sql, $this->conn) or die (mysql_error());
@@ -32,12 +33,28 @@ class RolsFtpDAO {
            }
        }
        return $rolFtp;
-   }
+    }
    
     /*
-     * Donat un objecte de tipus RolFtp, l'afegeix a la taula corresponent de la DB
+     * Donat un objecte de tipus RolFtp,
+     *  ·L'afegeix a la taula corresponent de la DB (pureFTPD)
+     *  ·N'obté el ID de sistema (autogenerat en DB)
+     *  ·En crea les carpetes necessàries
      */
     public function save(&$vo) {
+        /* Inserim el RolFTP rebut a la DB */
+        insertIntoDB($vo);
+        
+        /* Recupero el RolFTP de la DB amb el camp ID autogenerat*/
+        /* @var $rolFTP RolFtp */
+        $rolFTP = getByUser( $vo->getUser() );
+        
+        /* Creo la carpeta en el FS i la dóna (chown) al usuari $getId() */
+        createFTP($rolFTP);
+    }
+    
+    /* Donat un VO de tipus RolDTP, en fa l'insert a la DB */
+    public function insertIntoDB(&$vo) {
         /* Generem la query usant constants */
         $sql = "INSERT INTO " . CTRolsFtp::NAME_TABLE . " ("
                 . CTRolsFtp::NAME_COL_USER . ", "
@@ -46,7 +63,6 @@ class RolsFtpDAO {
                 . CTRolsFtp::NAME_COL_DLBANDWIDTH . ", "
                 . CTRolsFtp::NAME_COL_ULBANDWIDTH . ", "
                 . CTRolsFtp::NAME_COL_GID . ", "
-                . CTRolsFtp::NAME_COL_ID . ", "
                 . CTRolsFtp::NAME_COL_IPACCESS . ", "
                 . CTRolsFtp::NAME_COL_PASSWORD . ", "
                 . CTRolsFtp::NAME_COL_QUOTAFILES . ", "
@@ -58,20 +74,23 @@ class RolsFtpDAO {
                 . $vo->getDLBandwidth() . ", "
                 . $vo->getULBandwidth() . ", "
                 . $vo->getGid() . ", "
-                . $vo->getId() . ", "
                 . $vo->getIpaccess() . ", "
                 . $vo->getPassword() . ", "
                 . $vo->getQuotaFiles() . ", "
                 . $vo->getQuotaSize() . ", "
                 . $vo->getStatus()
             . ")";
-
-        /* */
         
         /* Executem la query i retornem el resultat */
-        return $this->execute($sql);
+        $this->execute($sql);
     }
 
+    public function createFTP($vo) {
+        /* Invoco un shel script amb drets de sudo que farà:
+         *  ·Crear la carpeta a on toca
+         *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
+        exec("/usr/local/");
+    }
     
     /*
      * Donat un id, retorna -si existeix la DB- un objecte de tipus RolFtp
@@ -101,5 +120,6 @@ class RolsFtpDAO {
         $sql = "SELECT * FROM " . CTRolsFtp::NAME_TABLE;
         return $this->execute($sql);
     }
+    
 }
 
