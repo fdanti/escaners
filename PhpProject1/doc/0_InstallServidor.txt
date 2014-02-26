@@ -1,0 +1,36 @@
+Aquest document descriu els passos fets per instal·lar el Sistema operatiu.
+    Aquest document NO serà comú per tots els servidors que es muntin, de forma
+        n'hem separat la informació en un fitxer a part.
+
+Agafem un L6 reciclat (15879) del magatzem.
+
+Li assignem via pandora la IP 161.116.21.185
+
+Instal·lem el sistema Debian 7 de 32 bits
+    Particionat de /dev/sda amb LVM automàtic.
+    Tasks: Només triem SSH server
+    Password de root: -com el d'aules-
+    Password de utecnica: -com el del servidor sergi-
+
+Eliminem el lv de /home per innecessari. Això ens farà disposar de 60Gb extres.
+    umount /home;
+    lvremove /dev/mapper/UB15849-home;
+    mkdir /home/utecnica;
+    #edito /etc/fstab i trec la línia que fa referència a /home
+
+Creem l'espai de disc extra pel servei de FTP.
+    ·Afegim un disc dur extra de 80Gb per desar-hi les dades del servei ftp.
+    ·Decisió de disseny: fem un VG (Volume Group) al que inicialment només hi tindrem /dev/sdb1.
+         En un futur podem ampliar el LVM amb més discos.
+    ·Particionem el disc extra amb una única partició /dev/sdb1 de tipus LVM (8e)
+    ·Creem un VG amb la nova particio
+        vgcreate FTPservice /dev/sdb1
+    ·Creem el LV al nou vg.
+        lvcreate FTPservice -L 63,29GiB
+    ·Formategem el nou espai de disc a format ext4
+        mkfs.ext4 /dev/mapper/FTPservice-lvol0
+    ·Afegim el nou dispositiu al /etc/fstab per muntar-lo automàticament:
+        /dev/mapper/FTPservice-lvol0    /serveis/ftp    ext4    defaults        0       0
+    ·Creem la carpeta arrel de serveis i ftp i muntem el nou device:
+        mkdir /serveis/; mkdir /serveis/ftp;
+        mount -a

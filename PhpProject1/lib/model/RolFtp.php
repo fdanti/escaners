@@ -22,21 +22,12 @@ class FtpRol {  //TODO: aquesta classe extends Rol. Potser usar-ho ens estalviar
     private $QuotaFiles;  
     
     /* Constructor de la classe */
-    function __construct($User, $Password, $ipaccess, $Dir, $Uid='', $status='', $Gid='', $ULBandwidth='', $DLBandwidth='', $comment='', $QuotaSize='', $QuotaFiles='') {
-        $this->Uid = $Uid;
+    function __construct($User, $Password, $ipaccess, $Dir) {
         $this->User = $User;
         $this->Password = $Password;
         $this->ipaccess = $ipaccess;
         $this->Dir = $Dir;
-        $this->status = $status;
-        $this->Gid = $Gid;
-        $this->ULBandwidth = $ULBandwidth;
-        $this->DLBandwidth = $DLBandwidth;
-        $this->comment = $comment;
-        $this->QuotaSize = $QuotaSize;
-        $this->QuotaFiles = $QuotaFiles;
     }
-
     
     /* Getters auto-generats */
     public function getUser() {
