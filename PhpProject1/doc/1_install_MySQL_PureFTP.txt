@@ -1,0 +1,145 @@
+Aquest document conté tots els passos seguits per instal·lar el MySQL i la configuració del PureFTP
+    El PureFTP és un servidor de FTP virtual que ens permet fer una gestió dels usuaris mitjançant MySQL
+
+################################################################################
+Instal·lem el mysql:
+  apt-get install mysql-server mysql-client
+  Establim root password = 'Periak0'
+
+Instal·lem el pure-ftpd amb support per mysql
+  apt-get install pure-ftpd-mysql
+
+Creem l'usuari amb que el servidor de FTP es connectarà a la DB:
+                  Usuari 'pureftpd' i DB 'ftpusers' al MySQL
+  $> mysql -u root -p
+  CREATE DATABASE escaners;
+  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON escaners.rolftp TO
+            'pureftpd'@'localhost' IDENTIFIED BY 'aGd2;k3.J';
+  FLUSH PRIVILEGES;
+
+Creem la taula d'usuaris ftp amb les següents particularitats:
+  ·Auto_increment de la columna Uid a partir del uid 2000
+  ·El Gid per defecte serà 100 (users)
+  ·ipaccess per defecte serà 161.116.0.0/16
+  ·ULBandwidth i DLBandwidth serà 500KB/sec
+  ·QuotaSize (quota de disc): 1000Mb
+  ·QuotaFiles (numero de fitxers): 1000fitxers
+  ·Variable User i Dir són UNIQUE (no permetrem repeticions)
+  
+  $> mysql -u root -p 
+  USE escaners;
+  CREATE TABLE rolftp (
+  `Uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `User` varchar(16) NOT NULL default '',
+  `Password` varchar(64) NOT NULL default '',
+  `status` enum('0','1') NOT NULL default '1',
+  `Gid` varchar(11) NOT NULL default '100',
+  `Dir` varchar(128) NOT NULL default '',
+  `ULBandwidth` smallint(5) NOT NULL default '500',
+  `DLBandwidth` smallint(5) NOT NULL default '500',
+  `comment` tinytext,
+  `ipaccess` varchar(15) NOT NULL default '161.116.0.0/16',
+  `QuotaSize` smallint(5) NOT NULL default '1000',
+  `QuotaFiles` int(11) NOT NULL default '1000',
+  PRIMARY KEY (Uid),
+  UNIQUE KEY Uid (Uid)
+  );  
+  ALTER TABLE rolftp AUTO_INCREMENT = 2000;
+  ALTER TABLE rolftp ADD_UNIQUE (Dir);
+  ALTER TABLE rolftp ADD_UNIQUE (User);
+
+Ajustos dls fitxers de config del pure-ftpd
+  /etc/pure-ftpd/db/mysql.conf -> Canvis en la configuració de la connexió a DB: 
+        MYSQLSocket     /var/run/mysqld/mysqld.sock
+        MYSQLUser       pureftpd
+        MYSQLPassword   aGd2;k3.J
+        MYSQLDatabase   escaners
+        MYSQLCrypt      cleartext
+        MYSQLGetPW      SELECT Password FROM rolftp WHERE User='\L'
+        MYSQLGetUID     SELECT Uid FROM rolftp WHERE User='\L' AND ipaccess='\R'
+        MYSQLGetGID     SELECT Gid FROM rolftp WHERE User='\L'
+        MYSQLGetDir     SELECT Dir FROM rolftp WHERE User='\L'
+        MySQLGetQTAFS  SELECT QuotaFiles FROM rolftp WHERE User='\L'
+        MySQLGetQTASZ  SELECT QuotaSize FROM rolftp WHERE User='\L'
+        MySQLGetRatioUL SELECT ULRatio FROM rolftp WHERE User='\L'
+        MySQLGetRatioDL SELECT DLRatio FROM rolftp WHERE User='\L'
+        MySQLGetBandwidthUL SELECT ULBandwidth FROM rolftp WHERE User='\L'
+        MySQLGetBandwidthDL SELECT DLBandwidth FROM rolftp WHERE User='\L'
+  Deshabilitem la autenticació per PAM
+    En el fitxer /etc/pure-ftpd/conf/PAMAuthentication posem un 'no'
+  Forçem el chroot de tots els usuaris
+    Creant el fitxer /etc/pure-ftpd/conf/ChrootEveryone amb un 'yes'
+  
+Reiniciem el servei de pureFTP
+  /etc/init.d/pure-ftpd-mysql restart
+
+Fem proves:
+  $> mysql -u pureftpd -p #pwd='aGd2;k3.J'
+    USE escaners;
+    INSERT INTO rolftp (User, Password, Dir, ipaccess) VALUES ('test1','qwerty', '/serveis/ftp/pu_gtr_1', '161.116.21.140');
+    SELECT Uid FROM rolftp WHERE User='test1';
+      +------+
+      | Uid  |
+      +------+
+      | 2001 |
+      +------+
+      1 row in set (0.00 sec)
+    \q
+  $> mkdir /serveis/ftp/pu_gtr_1
+  $> chown 2001 /serveis/ftp/pu_gtr_1
+  $> chmod 700 /serveis/ftp/pu_gtr_1
+  $> mysql -u pureftpd -p #pwd='aGd2;k3.J'
+    USE escaners;
+    INSERT INTO rolftp (User, Password, Dir, ipaccess) VALUES ('test3','qwerty', '/serveis/ftp/pu_gtr_2', '161.116.34.63');
+    SELECT Uid FROM rolftp WHERE User='test3';
+      +------+
+      | Uid  |
+      +------+
+      | 2002 |
+      +------+
+      1 row in set (0.00 sec)
+    \q
+  $> mkdir /serveis/ftp/pu_gtr_2
+  $> chown 2002 /serveis/ftp/pu_gtr_2
+  $> chmod 700 /serveis/ftp/pu_gtr_2
+
+  Comprovem que:
+    ·No es pot fer login amb usuari del sistema (PAM)
+    ·Es pot fer login com a usuari test1 i test3 per a les adreces IP establertes i no per la resta.
+
+  Eliminem els usuaris i carpetes de proves:
+    $> mysql -u root -p
+        USE escaners;
+        DELETE FROM rolftp;
+        ALTER TABLE rolftp AUTO_INCREMENT = 2000;
+        \q
+    $> rm -Rf /serveis/ftp/pu_gtr_*
+
+PENDENT de finalitzar:
+    
+La operatoria PHP per tal d'afegir FTP en el sistema serà:
+    @params: nom de repositori + adreça IP
+    @returns: User i Password
+    Descripció:
+    ·Rebrem un nom de repositori ($repositori) i una adreça IP ($ipaddress) del formulari Web.
+    ·Farem $User=$repositori i $Dir=$PATH$repositori on $PATH=/serveis/ftp/data (alerta que vcanvia respecte les proves uqe haviem fet abans)
+    ·Crearem un $password random
+    ·Farem el INSERT 
+        INSERT INTO rolftp (User, Password, Dir, ipaccess) VALUES ($User,$Passwords,$Dir,$ipaddress);
+    ·Obetnim el Uid del usuari que acabem d'inserir:
+        $Uid = SELECT Uid FROM rolftp WHERE User='test3';
+    ·Invocarem un shell script amb drets de sudoer per crear la carpeta amb els permisos necessaris:
+        /serveis/ftp/script-crea_ftp.sh $repositori $Uid;
+            Acions que farà:
+                mkdir $PATH$repositori;
+                chown $Uid $PATH$repositori;
+                chmod 700 $PATH$repositori;
+
+    
+PENDENT:
+·Verificar autenticació des de diferents IP. No es permeten rangs de IP!
+·Verificar gestió de quotes. Funcionen? Cal activar alguna cosa? Recompilar?
+·NO APLICABLE PER EVITAR INCOMPATIBILITATS AMS ESCANNERS ANTICS: SSL/TLS [info: http://download.pureftpd.org/pure-ftpd/doc/README.TLS]
+  
+
+

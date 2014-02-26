@@ -50,7 +50,8 @@ ADD CONSTRAINT `fk_permisos_repositori`
   ON UPDATE CASCADE;
 
 /* Afegit per fdanti el 25/2/14. Taula que contindrà les dades dels usuaris FTP per pureftp-mysql*/
-CREATE TABLE rolftp (
+/*
+  CREATE TABLE rolftp (
   `Uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `User` varchar(16) NOT NULL default '',
   `Password` varchar(64) NOT NULL default '',
@@ -66,4 +67,5 @@ CREATE TABLE rolftp (
   PRIMARY KEY (Uid),
   UNIQUE KEY Uid (Uid)
   );  
-  ALTER TABLE users AUTO_INCREMENT = 2000;
+  ALTER TABLE rolftp AUTO_INCREMENT = 2000;
+*/
