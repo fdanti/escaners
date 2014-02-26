@@ -9,15 +9,16 @@
 class Rol {
     private $id;            //Autoincrement, Primary key
     private $ldapName;      //Unike key
-    private $shownName;
-    private $isGroup;
-    private $isAdmin;
+    private $shownName="";
+    private $isGroup=0;
+    private $isAdmin=0;
     
     /* Constructor de la classe */
     public function __construct($id = "", $ldapName, $shownName, $isGroup, $isAdmin) {
         $this->id =$id;
         $this->ldapName = $ldapName;
         $this->shownName = $shownName;
+        if($this->shownName==null) $this->shownName="";
         $this->isGroup = $isGroup;
         $this->isAdmin = $isAdmin;
     }
@@ -41,6 +42,14 @@ class Rol {
 
     public function getIsAdmin() {
         return $this->isAdmin;
+    }
+    
+    public function setAdmin($num){
+        $this->isAdmin=$num;
+    }
+    
+    public function setShownName($nom){
+        $this->shownName=$nom;
     }
 
 }

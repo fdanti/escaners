@@ -14,7 +14,7 @@ if(isset($_GET['idRepo'])){
 $con_permis = new PermisosDAO();
 
 $resultat = $con_permis->getByRepo($idRepo);
-if($resultat!=null){
+if($resultat){
     $permis=$resultat[0];
     $rols=$resultat[1];
 }
@@ -30,14 +30,20 @@ $tots_rols = $con_rols->getAll();
     <h2>Modificar permisos d'usuari:</h2>
     <div id="helpedit" class="help"><p style="padding: 0px; margin:5px;">Llistat d'usuaris amb permís:</p></div>
     <div>
-        <?php if($resultat!=null){?>
+        <?php if($resultat){?>
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
         <?php
         $i=0;
         foreach($rols as $rol){
         ?>
-                <td id='rol<?php echo $rol->getId();?>' border="1" align="center" width="25%"><?php echo $rol->getShownName();?> <img src="../img/delete.png" height="15" onclick="carregaDiv('#helpedit', './admin/consultes/deletepermis.php?idRol=<?php echo $rol->getId();?>&idRepo=<?php echo $idRepo;?>','rol<?php echo $rol->getId();?>')" style='cursor: pointer;' /></td>
+                <td id='rol<?php echo $rol->getId();?>' border="1" align="center" width="25%">
+                    <?php if ($rol->getShownName()!="" && $rol->getShownName()!=null){
+                        echo $rol->getShownName();
+                    }else{
+                        echo $rol->getLdapName();
+                    };?>
+                    <img src="../img/delete.png" height="15" onclick="carregaDivDelete('#helpedit', './admin/consultes/deletepermis.php?idRol=<?php echo $rol->getId();?>&idRepo=<?php echo $idRepo;?>','rol<?php echo $rol->getId();?>')" style='cursor: pointer;' /></td>
         <?php
             if($i%4==0 && $i!=0){
                 echo "</tr><tr>";
@@ -66,7 +72,13 @@ $tots_rols = $con_rols->getAll();
             <select id='idRol' name='idRol'>
             <?php
                 foreach($tots_rols as $rol){?>
-                <option value='<?php echo $rol->getId();?>'><?php echo $rol->getShownName()?></option>;
+                <option value='<?php echo $rol->getId();?>'>
+                   <?php if ($rol->getShownName()!="" && $rol->getShownName()!=null){
+                        echo $rol->getShownName();
+                    }else{
+                        echo $rol->getLdapName();
+                    };?>
+                </option>;
             <?php }?>
             </select>
             <input id='idRepo' name="idRepo" type='hidden' value="<?php echo $idRepo;?>">

@@ -75,9 +75,25 @@ class RepositorisDAO {
                          $row[CTRepos::NAME_COL_NOM],
                          $row[CTRepos::NAME_COL_NOTES]);
            }
+           return $repositori;
        }
        
-       return $repositori;
+       return false;
+       
+    }
+    
+    public function getLast() {
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM ".CTRepos::NAME_TABLE." ORDER BY ".CTRepos::NAME_COL_ID." DESC LIMIT 1";
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
+        
+       if (mysql_num_rows($result) > 0) {
+            $row = mysql_fetch_assoc($result);
+            return $row[CTRepos::NAME_COL_ID];
+       }else{
+            return false;
+       }
     }
 
     //Remove a record form DB

@@ -22,16 +22,7 @@ class RolsDAO {
        $result = mysql_query($sql, $this->conn) 
                or die (mysql_error());
        
-       /* Si obtenim resultats de la query, posem-los en un VO de tipus Rol */
-       if (mysql_num_rows($result) > 0) {
-           for ($i = 0; $i < mysql_num_rows($result); $i++) {
-               $row = mysql_fetch_assoc($result);
-               $rol[$i] = new Rol($row[CTRols::NAME_COL_ID], $row[CTRols::NAME_COL_LDAPNAME],
-                       $row[CTRols::NAME_COL_SHOWNAME], $row[CTRols::NAME_COL_ISGROUP], $row[CTRols::NAME_COL_ISADMIN]);
-           }
-           return $rol;
-       }
-       return null;
+       return $result;
    }
    
     /*
@@ -39,16 +30,21 @@ class RolsDAO {
      */
     public function save(&$vo) {
         /* Generem la query usant constants */
-        $sql = "INSERT INTO ".CTRol::NAME_TABLE.
+        $sql = "INSERT INTO ".CTRols::NAME_TABLE.
             " (".CTRols::NAME_COL_LDAPNAME.", ".
                 CTRols::NAME_COL_SHOWNAME.", ".
                 CTRols::NAME_COL_ISADMIN.", ".
                 CTRols::NAME_COL_ISGROUP.")".
-            " VALUES (".$vo->getLdapName().", ".$vo->getShowName().
-                ", ".$vo->getIsAdmin().", ".$vo->getIsGroup().")";
-
+            " VALUES (\"".$vo->getLdapName()."\", \"".$vo->getShownName().
+                "\", ".$vo->getIsAdmin().", ".$vo->getIsGroup().") ".
+            "ON DUPLICATE KEY UPDATE ".CTRols::NAME_COL_LDAPNAME."=\"".$vo->getLdapName()."\", ".
+            CTRols::NAME_COL_SHOWNAME."=\"".$vo->getShownName()."\", ".
+            CTRols::NAME_COL_ISADMIN."=".(int)$vo->getIsAdmin().", ".
+            CTRols::NAME_COL_ISGROUP."=".(int)$vo->getIsGroup();
         /* Executem la query i retornem el resultat */
-        return $this->execute($sql);
+
+        $result=$this->execute($sql);
+        return  $result;
     }
     
     public function saveLdap(&$vo) {
@@ -68,11 +64,20 @@ class RolsDAO {
      */
     public function getByID($id) {
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM " + CTRols::NAME_TABLE +
-                " WHERE " + CTRols::NAME_COL_ID + "= $id";
+        $sql = "SELECT * FROM ".CTRols::NAME_TABLE.
+                " WHERE ".CTRols::NAME_COL_ID."= $id";
 
         /* Executem la query i retornem el resultat */
-        return $this->execute($sql);
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Rol */
+       if (mysql_num_rows($result) > 0) {
+            $row = mysql_fetch_assoc($result);
+            $rol = new Rol($row[CTRols::NAME_COL_ID], $row[CTRols::NAME_COL_LDAPNAME],
+                 $row[CTRols::NAME_COL_SHOWNAME], $row[CTRols::NAME_COL_ISGROUP], $row[CTRols::NAME_COL_ISADMIN]);
+           return $rol;
+       }
+
+       return false;
     }
     
     /*
@@ -84,12 +89,31 @@ class RolsDAO {
                 " WHERE " + CTRols::NAME_COL_LDAPNAME + "= $name";
 
         /* Executem la query i retornem el resultat */
-        return $this->execute($sql);
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Rol */
+       if (mysql_num_rows($result) > 0) {
+            $row = mysql_fetch_assoc($result);
+            $rol = new Rol($row[CTRols::NAME_COL_ID], $row[CTRols::NAME_COL_LDAPNAME],
+                 $row[CTRols::NAME_COL_SHOWNAME], $row[CTRols::NAME_COL_ISGROUP], $row[CTRols::NAME_COL_ISADMIN]);
+           return $rol;
+       }
+        return false;
+
     }
     
     public function getAll(){
         $sql = "SELECT * FROM ".CTRols::NAME_TABLE;
-        return $this->execute($sql);
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Rol */
+       if (mysql_num_rows($result) > 0) {
+           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+               $row = mysql_fetch_assoc($result);
+               $rol[$i] = new Rol($row[CTRols::NAME_COL_ID], $row[CTRols::NAME_COL_LDAPNAME],
+                       $row[CTRols::NAME_COL_SHOWNAME], $row[CTRols::NAME_COL_ISGROUP], $row[CTRols::NAME_COL_ISADMIN]);
+           }
+           return $rol;
+       }
+       return false;
     }
     
     public function getLast(){
@@ -99,10 +123,25 @@ class RolsDAO {
         
        if (mysql_num_rows($result) > 0) {
             $row = mysql_fetch_assoc($result);
-            echo $row[CTRols::NAME_COL_ID];
             return $row[CTRols::NAME_COL_ID];
-       }else{
-            return null;
        }
+       
+       return false;
+    }
+
+    
+    public function getAdmins(){
+        $sql = "SELECT * FROM ".CTRols::NAME_TABLE." WHERE ".CTRols::NAME_COL_ISADMIN."=1";
+        $result= $this->execute($sql);
+       if (mysql_num_rows($result) > 0) {
+           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+               $row = mysql_fetch_assoc($result);
+               $rol[$i] = new Rol($row[CTRols::NAME_COL_ID], $row[CTRols::NAME_COL_LDAPNAME],
+                       $row[CTRols::NAME_COL_SHOWNAME], $row[CTRols::NAME_COL_ISGROUP], $row[CTRols::NAME_COL_ISADMIN]);
+           }
+           return $rol;
+       }
+       
+       return false;
     }
 }

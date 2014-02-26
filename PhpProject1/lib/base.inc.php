@@ -6,12 +6,12 @@
 
 require_once 'lib/Constants.php';
 
-require_once 'lib/dao/FilesDAO.php';
+//require_once 'lib/dao/FilesDAO.php';
 require_once 'lib/dao/PermisosDAO.php';
 require_once 'lib/dao/RepositorisDAO.php';
 require_once 'lib/dao/RolsDAO.php';
 require_once 'lib/logic/EscanersLogic.php';
-require_once 'lib/model/File.php';
+//require_once 'lib/model/File.php';
 require_once 'lib/model/Permis.php';
 require_once 'lib/model/Repositori.php';
 require_once 'lib/model/Rol.php';
