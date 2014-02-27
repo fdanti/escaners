@@ -1,0 +1,46 @@
+Aquest document conté tots els passos seguits per instalar i configurar apache i les seves extensions
+
+################################################################################
+Instalo apache2:
+    apt-get install apache2
+
+Instalo php a apache:
+    apt-get install php5 libapache2-mod-php5
+
+Reinicio el servidor:
+    /etc/init.d/apache2 restart
+
+Connecto via web al servidor i comprovo que s'ha instal·lat correctament:
+    It works!
+
+    This is the default web page for this server.
+
+    The web server software is running but no content has been added, yet.
+
+Creo la carpeta del servei web amb la carpeta de dades
+    mkdir /serveis/www
+    mkdir /serveis/www/data
+
+Creo un enllaç simbòlic de la configuració dels sites del servidor
+    root@UB15849:/serveis/www# ln -s /etc/apache2/sites-available/default config-site
+
+Accedeixo al fitxer i modifico les següents línies:
+    DocumentRoot /serveis/www/data
+    <Directory /serveis/www/data>
+
+Torno a reiniciar el servidor
+    /etc/init.d/apache2 restart
+
+Copio tots els fitxers del servidor d'escàners al directori corresponent
+    scp -r /home/baku/NetBeansProjects/escaners/PhpProject1/* root@161.116.21.185:/serveis/www/data
+
+Modifico el fitxer lib/base_inc.php per als paràmetres de connexió del servidor mysql
+    class ConfigDB {
+         const HOST     = "localhost";
+         const DB       = "escaners";
+         const USER     = "web";
+         const PWD      = "Hj_87a";
+         const CHARSET  = "utf8";
+    }
+
+Faig les mateixes modificacions al fitxer /admin/consultes/ConfigDB.php

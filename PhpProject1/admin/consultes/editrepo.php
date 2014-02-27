@@ -18,6 +18,17 @@ $error="";
 $numerrors=0;
 $ok=0;
 
+if(isset($_POST['idRepo'])){
+	$idRepo=$_POST['idRepo'];
+	if($idRepo==NULL || $idRepo==""){
+		$error.="ERROR: No s'ha introduït la id del repositori.<br>";
+		$numerrors++;
+	}
+}else{
+	$error.="ERROR: No s'ha introduït la id del repositori.<br>";
+	$numerrors++;
+}
+
 if(isset($_POST['ip'])){
 	$ip=$_POST['ip'];
 	if($ip==NULL || $ip==""){
@@ -53,9 +64,10 @@ if(isset($_POST['usuaris'])){
         $afegir=true;
     }
 }
+
 if($numerrors==0){
     
-        $repositori = new Repositori("", $ip, $nom, $notes);
+        $repositori = new Repositori($idRepo, $ip, $nom, $notes);
 	   
 	if(!($resultat=$con_repos->save($repositori))){
             echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";
@@ -68,7 +80,6 @@ if($numerrors==0){
                         echo "<p style=\"color:#662222\">".$error."</p>";
                         $numerrors++;
                     }else{
-                        $idRepo=$con_repos->getLast();
                         $idRol=$con_rols->getLast();
                         $permis=new Permis($idRepo,$idRol);
                         if(!$con_permisos->save($permis)){
@@ -84,7 +95,7 @@ if($numerrors==0){
                     echo "<p>ERROR: Ha succeït un error en l'introducció dels usuaris</p>";
                 }
             }else{
-                echo "<p>Element afegit correctament.</p>";
+                echo "<p>Element modificat correctament.</p>";
                 $ok=1;
             }
 	}

@@ -38,7 +38,7 @@ class PermisosDAO {
         $sql = "INSERT INTO ".CTPermisos::NAME_TABLE.
                 " (".CTPermisos::NAME_COL_IDREPO.", ".CTPermisos::NAME_COL_IDROL.")".
                 " VALUES (".$vo->getIdRepo().", ".$vo->getIdRol().")";
-
+       
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
     }
@@ -76,12 +76,14 @@ class PermisosDAO {
                             $row[CTRepos::NAME_COL_NOM],
                             $row[CTRepos::NAME_COL_NOTES]);
            }
-       }
-       
        $retorn[0]=$permis;
        $retorn[1]=$repo;
        
        return $retorn;
+       }
+       
+       return false;
+       
     }
     
     public function getByRepo($idRepo) {
@@ -109,7 +111,7 @@ class PermisosDAO {
         
         return $retorn;
        }else{
-           return null;
+           return false;
        }
     }
 

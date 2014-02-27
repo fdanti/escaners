@@ -33,9 +33,17 @@ class RepositorisDAO {
      */
     public function save(&$vo) {
         /* Generem la query usant constants */
-        $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
-                " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.")".
-                " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\")";
+        if($vo->getId()==""){
+            $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
+                    " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.")".
+                    " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\")";
+        }else{
+            $sql = "UPDATE ".CTRepos::NAME_TABLE." ".
+            "SET ".CTRepos::NAME_COL_IPSCAN."=\"".$vo->getIPscan()."\", ".
+            CTRepos::NAME_COL_NOM."=\"".$vo->getNom()."\", ".
+            CTRepos::NAME_COL_NOTES."=\"".$vo->getNotes()."\" ".
+            "WHERE ".CTRepos::NAME_COL_ID."=".$vo->getId();
+        }
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
@@ -75,9 +83,25 @@ class RepositorisDAO {
                          $row[CTRepos::NAME_COL_NOM],
                          $row[CTRepos::NAME_COL_NOTES]);
            }
+           return $repositori;
        }
        
-       return $repositori;
+       return false;
+       
+    }
+    
+    public function getLast() {
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM ".CTRepos::NAME_TABLE." ORDER BY ".CTRepos::NAME_COL_ID." DESC LIMIT 1";
+        $result=$this->execute($sql);
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Repositori */
+        
+       if (mysql_num_rows($result) > 0) {
+            $row = mysql_fetch_assoc($result);
+            return $row[CTRepos::NAME_COL_ID];
+       }else{
+            return false;
+       }
     }
 
     //Remove a record form DB

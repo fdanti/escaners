@@ -61,6 +61,10 @@
                     $("#contentadmin").load("./admin/add.php");
                 }else if(num==2){
                     $("#contentadmin").load("./admin/edit.php");
+                }else if(num==3){
+                    $("#contentadmin").load("./admin/admins.php");
+                }else if(num==4){
+                    $("#contentadmin").load("./admin/editusers.php");
                 }
             }
             
