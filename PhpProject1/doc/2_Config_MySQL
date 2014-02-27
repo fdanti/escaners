@@ -1,0 +1,48 @@
+Aquest document conté tots els passos seguits per configurar la base de dades i els seus usuaris
+
+################################################################################
+Creem l'usuari web:
+    mysql> CREATE USER web IDENTIFIED BY 'Hj_87a'
+Li donem els permisos bàsics:
+    GRANT INSERT, DELETE, SELECT ON escaners.* TO web;
+    FLUSH PRIVILEGES;
+
+Creem les taules de la base de dades (pot ser que durant la implementació alguna d'aquestes instruccions sigui modificada)
+
+    mysql> USE `escaners`;
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+
+    Database changed
+    mysql> CREATE TABLE `repositori` (
+        ->   `idRepo` int(11) NOT NULL AUTO_INCREMENT,
+        ->   `ipscan` varchar(15) NOT NULL,
+        ->   `nom` varchar(32) NOT NULL,
+        ->   `observacions` varchar(256) DEFAULT NULL,
+        ->   PRIMARY KEY (`idRepo`)
+        -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    Query OK, 0 rows affected (0.09 sec)
+
+    mysql> 
+    mysql> CREATE TABLE `rol` (
+        ->   `idRol` int(11) NOT NULL AUTO_INCREMENT,
+        ->   `isGroup` tinyint NOT NULL DEFAULT 0,
+        ->   `ldapname` varchar(16) NOT NULL,
+        ->   `showname` varchar(32) DEFAULT NULL,
+        ->   `isAdmin` tinyint NOT NULL DEFAULT 0,
+        ->   PRIMARY KEY (`idRol`),
+        ->   UNIQUE KEY `ldapname_UNIQUE` (`ldapname`,`isGroup`)
+        -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    Query OK, 0 rows affected (0.08 sec)
+
+    mysql> 
+    mysql> CREATE TABLE `permisos` (
+        ->   `repositori_id` int(11) NOT NULL,
+        ->   `rol_id` int(11) NOT NULL,
+        ->   PRIMARY KEY (`repositori_id`,`rol_id`),
+        ->   KEY `fk_permisos_rol1_idx` (`rol_id`),
+        ->   KEY `fk_permisos_repositori_idx` (`repositori_id`),
+        ->   CONSTRAINT `fk_permisos_rol1` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`idRol`) ON DELETE CASCADE ON UPDATE CASCADE,
+        ->   CONSTRAINT `fk_permisos_repositori` FOREIGN KEY (`repositori_id`) REFERENCES `repositori` (`idRepo`) ON DELETE CASCADE ON UPDATE CASCADE
+        -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    Query OK, 0 rows affected (0.13 sec)
