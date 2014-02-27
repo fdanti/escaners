@@ -1,0 +1,19 @@
+Aquest document conté tots els passos seguits per instalar i configurar apache i les seves extensions
+
+################################################################################
+Instalo apache2:
+    apt-get install apache2
+
+Instalo php a apache:
+    apt-get install php5 libapache2-mod-php5
+
+Reinicio el servidor:
+    /etc/init.d/apache2 restart
+
+Connecto via web al servidor i comprovo que s'ha instal·lat correctament:
+    It works!
+
+    This is the default web page for this server.
+
+    The web server software is running but no content has been added, yet.
+
