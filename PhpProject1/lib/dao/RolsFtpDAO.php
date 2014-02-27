@@ -49,7 +49,7 @@ class RolsFtpDAO {
         /* @var $rolFTP RolFtp */
         $rolFTP = getByUser( $vo->getUser() );
         
-        /* Creo la carpeta en el FS i la dóna (chown) al usuari $getId() */
+        /* Creo la carpeta en el FS amb els permisos adequats i obre el firewall per la IP donada */
         createFTP($rolFTP);
     }
     
@@ -89,7 +89,7 @@ class RolsFtpDAO {
         /* Invoco un shel script amb drets de sudo que farà:
          *  ·Crear la carpeta a on toca
          *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
-        exec("/usr/local/");
+        exec(CTGlobals::SCRIPT_FTP $vo);
     }
     
     /*

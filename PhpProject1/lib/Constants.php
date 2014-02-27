@@ -3,7 +3,7 @@
 /* 
  * Contindrà les constants del Projecte
  */
-class OtherConstants { 
+class CTGlobals { 
     const SCRIPT_FTP    =  "/serveis/ftp/createFTP.sh";
     
 }
