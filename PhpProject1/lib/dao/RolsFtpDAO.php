@@ -89,7 +89,7 @@ class RolsFtpDAO {
         /* Invoco un shel script amb drets de sudo que farà:
          *  ·Crear la carpeta a on toca
          *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
-        exec(CTGlobals::SCRIPT_FTP $vo);
+        //exec( CTGlobals::SCRIPT_FTP $vo);
     }
     
     /*

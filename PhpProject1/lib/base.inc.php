@@ -38,8 +38,8 @@ class ConfigDB {
 //    FILE CONFIGURATION
 // -----------------------------
 class ConfigFS {
-    const PATH      = "/tmp/escaners/"; //PATH a l'arrel dels escanejos
-    const DEL_TIME  = "600";             //Segons que es guardarà un fitxer al FS
+    const PATH      = "/serveis/ftp/data/";             //PATH a l'arrel dels escanejos
+    const SCRIPT_FTP    =  "/serveis/ftp/createFTP.sh"; //TODO: crear aquest script
 }
 
 ?>
