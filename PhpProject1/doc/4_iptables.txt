@@ -1,0 +1,2 @@
+TODO: pensar la forma de que es crei una regla iptables que eprmeti l'accés
+    al FTP des de les ipaccess que tenim a la taula rolsftp
