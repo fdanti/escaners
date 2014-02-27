@@ -1,0 +1,75 @@
+Aquest document conté tots els passos seguits per instalar i configurar apache i les seves extensions
+
+################################################################################
+Instalo apache2:
+    apt-get install apache2
+
+Instalo php a apache i plugin de mysql:
+    apt-get install php5 libapache2-mod-php5 php5-mysql
+
+Reinicio el servidor:
+    /etc/init.d/apache2 restart
+
+Connecto via web al servidor i comprovo que s'ha instal·lat correctament:
+    It works!
+
+    This is the default web page for this server.
+
+    The web server software is running but no content has been added, yet.
+
+Creo la carpeta del servei web amb la carpeta de dades
+    mkdir /serveis/www
+    mkdir /serveis/www/data
+
+Creo un enllaç simbòlic de la configuració dels sites del servidor
+    cp /etc/apache2/sites-available/default /serveis/www/config-site
+    ln -s /serveis/www/config_site /etc/apache2/sites-available/
+    a2dissite default
+    a2ensite config_site
+
+Activo els mòduls de Apache necessaris per usar la autenticació per LDAP
+    a2enmod authnz_ldap
+    a2enmod authn_alias
+    a2enmod ldap
+
+Modificoel fitxer /serveis/www/config_site i el deixo així:
+    LDAPTrustedGlobalCert CA_BASE64 /etc/ssl/ldap-certs/ca/ca-cert.pem
+    LDAPTrustedMode SSL
+    LDAPVerifyServerCert Off
+    <AuthnProviderAlias ldap ldapUB>
+            AuthLDAPURL "ldaps://ldapnet2.ub.edu:636/ou=people,ou=auten,o=ub,c=es"
+            AuthLDAPBindDN "cn=svnmates,ou=Aplicacions,o=ub,c=es"
+            AuthLDAPBindPassword h3e7i3gh
+            AuthzLDAPAuthoritative off
+    </AuthnProviderAlias>
+    <VirtualHost *:80>
+            ServerAdmin webmaster@localhost
+            DocumentRoot /serveis/www/data
+            <Directory /serveis/www/data>
+                    Options Indexes FollowSymLinks MultiViews
+                    AllowOverride None
+                    AuthType Basic
+                    AuthName "autenticacio ldap"
+                    AuthBasicProvider ldapUB
+                    require valid-user
+            </Directory>
+            ErrorLog ${APACHE_LOG_DIR}/error.log
+            LogLevel warn
+            CustomLog ${APACHE_LOG_DIR}/access.log combined
+    </VirtualHost>
+
+Torno a reiniciar el servidor
+    /etc/init.d/apache2 restart
+
+Pugem tots els fitxers del projecte al directori corresponent: /serveis/www/data
+
+Modifico el fitxer lib/base_inc.php per als paràmetres de connexió del servidor mysql
+    class ConfigDB {
+         const HOST     = "localhost";
+         const DB       = "escaners";
+         const USER     = "web";
+         const PWD      = "Hj_87a";
+         const CHARSET  = "utf8";
+    }
+
+Faig les mateixes modificacions al fitxer /admin/consultes/ConfigDB.php
