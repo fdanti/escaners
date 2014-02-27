@@ -31,13 +31,14 @@ $repositori = $con_repo->get($idRepo);
             </tr>
             <tr>
                 <td align="right" style="padding-right: 30px;">Notes addicionals:</td>
-                <td><textarea cols="32" rows="6" id='notes' name='notes' ><?php echo nl2br($repositori->getNotes());?></textarea></td>
+                <td><textarea cols="32" rows="6" id='notes' name='notes' ><?php echo $repositori->getNotes();?></textarea></td>
             </tr>
             <tr>
                 <td align="right" style="padding-right: 30px;">Llistat d'usuaris a crear/afegir <span style="font-size: 70%; font-weight: bolder; color: #FF0000;">(separats per coma)</span>:</td>
                 <td><input type="text" id='usuaris' name='usuaris' size="32" maxlength="32" /></td>
             </tr>
         </table>
+        <input type="hidden" id="idRepo" name="idRepo" value="<?php echo $idRepo;?>" />
         <input id="submit" name="submit" type="submit" value="Modificar" style="margin-top:20px; margin-left:200px;" />
     </form>
 

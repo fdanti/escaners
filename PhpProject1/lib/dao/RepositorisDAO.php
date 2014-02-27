@@ -33,9 +33,17 @@ class RepositorisDAO {
      */
     public function save(&$vo) {
         /* Generem la query usant constants */
-        $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
-                " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.")".
-                " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\")";
+        if($vo->getId()==""){
+            $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
+                    " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.")".
+                    " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\")";
+        }else{
+            $sql = "UPDATE ".CTRepos::NAME_TABLE." ".
+            "SET ".CTRepos::NAME_COL_IPSCAN."=\"".$vo->getIPscan()."\", ".
+            CTRepos::NAME_COL_NOM."=\"".$vo->getNom()."\", ".
+            CTRepos::NAME_COL_NOTES."=\"".$vo->getNotes()."\" ".
+            "WHERE ".CTRepos::NAME_COL_ID."=".$vo->getId();
+        }
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);
