@@ -4,7 +4,7 @@ Aquest document conté tots els passos seguits per instal·lar el MySQL i la con
 ################################################################################
 Instal·lem el mysql:
   apt-get install mysql-server mysql-client
-  Establim root password = 'Periak0'
+  Establim root password = 'XXXXXXXX'
 
 Instal·lem el pure-ftpd amb support per mysql
   apt-get install pure-ftpd-mysql
@@ -14,7 +14,7 @@ Creem l'usuari amb que el servidor de FTP es connectarà a la DB:
   $> mysql -u root -p
   CREATE DATABASE escaners;
   GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON escaners.rolftp TO
-            'pureftpd'@'localhost' IDENTIFIED BY 'aGd2;k3.J';
+            'pureftpd'@'localhost' IDENTIFIED BY 'XXXXXXXXXX';
   FLUSH PRIVILEGES;
 
 Creem la taula d'usuaris ftp amb les següents particularitats:
