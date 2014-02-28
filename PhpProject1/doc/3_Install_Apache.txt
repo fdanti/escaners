@@ -37,6 +37,8 @@ Activo els mòduls de Apache necessaris per usar la autenticació per LDAP i SSL
     a2enmod ldap
     a2enmod ssl
 
+Edito /etc/apache2/ports.conf i deshabilito el port 80
+
 Torno a reiniciar el servidor
     /etc/init.d/apache2 restart
 
