@@ -49,11 +49,12 @@ class RolsFtpDAO {
         /* @var $rolFTP RolFtp */
         $rolFTP = getByUser( $vo->getUser() );
         
-        /* Creo la carpeta en el FS amb els permisos adequats i obre el firewall per la IP donada */
+        /* Creo la carpeta en el FS amb els permisos adequats  */
         createFTP($rolFTP);
         
-        /* Actualitzo les regles del firewall */
-        //TODO: implementar bash script i executar-lo
+        /* Actualitzo les regles del firewallper incorporar la nova IP i eliminar les obsoletes */
+        syncFirewall();
+        
     }
     
     /* Donat un VO de tipus RolDTP, en fa l'insert a la DB */
@@ -94,6 +95,13 @@ class RolsFtpDAO {
          *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
         $return_val='';
         exec( ConfigFS::SCRIPT_FTP .  $vo->getDir() . $vo->getUid(), $return_val);
+        return $return_val;
+    }
+    
+    /* Invoca un script que llegeix les ipaccess de la taula MySQl i obre el firewall convenientment */
+    public function syncFirewall() {
+        $return_val='';
+        exec( ConfigFS::SCRIPT_FIREWALL, $return_val);
         return $return_val;
     }
     
