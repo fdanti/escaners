@@ -56,6 +56,8 @@ Creem el shel script /serveis/ftp/createFTP.sh amb el següent contingut:
     #######################################################
 Cal ajustar el valor de la variable $ROOT per tal que es generin les carpetes 
         dels FTP en /serveis/ftp/data/
+Fem chmod per protegir-lo:
+    chmod 701 /serveis/ftp/createFTP.sh
 
 Fem que l'usuari www-data pugi executar el script amb drets de superadmin via sudoers.
     ·Instal·lem el paquet sudo

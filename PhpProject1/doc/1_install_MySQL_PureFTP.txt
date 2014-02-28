@@ -10,7 +10,7 @@ Instal·lem el pure-ftpd amb support per mysql
   apt-get install pure-ftpd-mysql
 
 Creem l'usuari amb que el servidor de FTP es connectarà a la DB:
-                  Usuari 'pureftpd' i DB 'ftpusers' al MySQL
+                  Usuari 'pureftpd' i DB 'escaners' al MySQL
   $> mysql -u root -p
   CREATE DATABASE escaners;
   GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON escaners.rolftp TO
