@@ -28,7 +28,7 @@ class FtpRol {  //TODO: aquesta classe extends Rol. Potser usar-ho ens estalviar
         $this->ipaccess = $ipaccess;
         $this->Dir = $Dir;
     }
-    
+
     /* Getters auto-generats */
     public function getUser() {
         return $this->User;
@@ -36,6 +36,10 @@ class FtpRol {  //TODO: aquesta classe extends Rol. Potser usar-ho ens estalviar
 
     public function getStatus() {
         return $this->status;
+    }
+    
+    public function getDir() {
+        return $this->Dir;
     }
 
     public function getPassword() {

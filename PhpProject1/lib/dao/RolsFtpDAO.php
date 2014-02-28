@@ -51,6 +51,9 @@ class RolsFtpDAO {
         
         /* Creo la carpeta en el FS amb els permisos adequats i obre el firewall per la IP donada */
         createFTP($rolFTP);
+        
+        /* Actualitzo les regles del firewall */
+        //TODO: implementar bash script i executar-lo
     }
     
     /* Donat un VO de tipus RolDTP, en fa l'insert a la DB */
@@ -90,7 +93,7 @@ class RolsFtpDAO {
          *  ·Crear la carpeta a on toca
          *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
         $return_val='';
-        exec( ConfigFS::SCRIPT_FTP . $vo, $return_val);
+        exec( ConfigFS::SCRIPT_FTP .  $vo->getDir() . $vo->getUid(), $return_val);
         return $return_val;
     }
     
