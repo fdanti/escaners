@@ -1,5 +1,7 @@
 Aquest document conté tots els passos seguits per instalar i configurar apache i les seves extensions
 
+Modificat el 28/2/14 per fdanti per passar el servidor a SSL
+
 ################################################################################
 Instalo apache2:
     apt-get install apache2
@@ -21,42 +23,19 @@ Creo la carpeta del servei web amb la carpeta de dades
     mkdir /serveis/www
     mkdir /serveis/www/data
 
-Creo un enllaç simbòlic de la configuració dels sites del servidor
-    cp /etc/apache2/sites-available/default /serveis/www/config-site
-    ln -s /serveis/www/config_site /etc/apache2/sites-available/
-    a2dissite default
-    a2ensite config_site
+Creem el fitxer de configuració del site en /serveis/www/site_apache_ssl
+Linkem el fitxer a /etc/apache2/sites-available
+        ln -s /serveis/www/site_apache_ssl /etc/apache2/sites-available/
 
-Activo els mòduls de Apache necessaris per usar la autenticació per LDAP
+Deshabilitem els dites per defecte i habilitem el nou
+    a2dissite default
+    a2ensite site_apache_ssl
+
+Activo els mòduls de Apache necessaris per usar la autenticació per LDAP i SSL
     a2enmod authnz_ldap
     a2enmod authn_alias
     a2enmod ldap
-
-Modificoel fitxer /serveis/www/config_site i el deixo així:
-    LDAPTrustedGlobalCert CA_BASE64 /etc/ssl/ldap-certs/ca/ca-cert.pem
-    LDAPTrustedMode SSL
-    LDAPVerifyServerCert Off
-    <AuthnProviderAlias ldap ldapUB>
-            AuthLDAPURL "ldaps://ldapnet2.ub.edu:636/ou=people,ou=auten,o=ub,c=es"
-            AuthLDAPBindDN "cn=svnmates,ou=Aplicacions,o=ub,c=es"
-            AuthLDAPBindPassword h3e7i3gh
-            AuthzLDAPAuthoritative off
-    </AuthnProviderAlias>
-    <VirtualHost *:80>
-            ServerAdmin webmaster@localhost
-            DocumentRoot /serveis/www/data
-            <Directory /serveis/www/data>
-                    Options Indexes FollowSymLinks MultiViews
-                    AllowOverride None
-                    AuthType Basic
-                    AuthName "autenticacio ldap"
-                    AuthBasicProvider ldapUB
-                    require valid-user
-            </Directory>
-            ErrorLog ${APACHE_LOG_DIR}/error.log
-            LogLevel warn
-            CustomLog ${APACHE_LOG_DIR}/access.log combined
-    </VirtualHost>
+    a2enmod ssl
 
 Torno a reiniciar el servidor
     /etc/init.d/apache2 restart
