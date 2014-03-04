@@ -9,8 +9,8 @@ Li assignem via pandora la IP 161.116.21.185
 Instal·lem el sistema Debian 7 de 32 bits
     Particionat de /dev/sda amb LVM automàtic.
     Tasks: Només triem SSH server
-    Password de root: -com el d'aules-
-    Password de utecnica: -com el del servidor sergi-
+    Password de root: 
+    Password de utecnica: 
 
 Eliminem el lv de /home per innecessari. Això ens farà disposar de 60Gb extres.
     umount /home;
