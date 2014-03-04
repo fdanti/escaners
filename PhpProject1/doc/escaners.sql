@@ -69,3 +69,33 @@ ADD CONSTRAINT `fk_permisos_repositori`
   );  
   ALTER TABLE rolftp AUTO_INCREMENT = 2000;
 */
+
+/*Afegit per avilalta el 28/02/2014. Afegeixo camp password al repositori i faig les relacions entre els rols ftp i els repositoris*/
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+ALTER TABLE `escaners`.`repositori` 
+CHANGE COLUMN `nom` `nom` VARCHAR(16) NOT NULL ,
+ADD COLUMN `password` VARCHAR(64) NOT NULL AFTER `observacions`,
+ADD INDEX `nom` (`nom` ASC),
+ADD INDEX `password` (`password` ASC);
+
+ALTER TABLE `escaners`.`rolftp` 
+ADD INDEX `Password` (`Password` ASC);
+
+ALTER TABLE rolftp
+ADD FOREIGN KEY (Password)
+REFERENCES repositori(password);
+
+ALTER TABLE rolftp
+ADD FOREIGN KEY (User)
+REFERENCES repositori(nom);
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+

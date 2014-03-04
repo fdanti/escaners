@@ -15,7 +15,7 @@ if(isset($_GET['id'])){
 
     $id=$_GET['id'];
 
-    $repositori = new Repositori($id,0,0,"");
+    $repositori = new Repositori($id,"",0,0,"");
 
     if(!($resultat=$con_repos->delete($repositori))){
             echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";

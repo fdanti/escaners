@@ -4,6 +4,7 @@ require_once './configDB.php';
 require_once '../../lib/dao/RepositorisDAO.php';
 require_once '../../lib/dao/RolsDAO.php';
 require_once '../../lib/dao/PermisosDAO.php';
+require_once '../../lib/dao/RolsFtpDAO.php';
 require_once '../../lib/model/Repositori.php';
 require_once '../../lib/model/Rol.php';
 require_once '../../lib/model/Permis.php';
@@ -55,37 +56,47 @@ if(isset($_POST['usuaris'])){
 }
 if($numerrors==0){
     
-        $repositori = new Repositori("", $ip, $nom, $notes);
+        $repositori = new Repositori("", "", $ip, $nom, $notes);
+        $repositori->generaPassword();
 	   
 	if(!($resultat=$con_repos->save($repositori))){
             echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";
 	}else{
-            if($afegir){
-                $usuaris=  split(",", $usuaris);
-                foreach($usuaris as $usuari){
-                    $nouuser = new Rol("",$usuari,"",0,0);
-                    if(!$con_rols->saveLdap($nouuser)){
-                        echo "<p style=\"color:#662222\">".$error."</p>";
-                        $numerrors++;
-                    }else{
-                        $idRepo=$con_repos->getLast();
-                        $idRol=$con_rols->getLast();
-                        $permis=new Permis($idRepo,$idRol);
-                        if(!$con_permisos->save($permis)){
+            $con_ftp = new RolsFtpDAO;
+            $ftp = new FtpRol($repositori->getNom(), $repositori->getPwd(), $repositori->getIpScan(), "/serveis/ftp/data/".$repositori->getNom()."/");
+            if($con_ftp->firstSave($ftp)){
+                if($afegir){
+                    $usuaris=  split(",", $usuaris);
+                    foreach($usuaris as $usuari){
+                        $nouuser = new Rol("",$usuari,"",0,0);
+                        if(!$con_rols->saveLdap($nouuser)){
+                            echo "<p style=\"color:#662222\">".$error."</p>";
                             $numerrors++;
-                            echo "<p>ERROR: Ha succeït un error en l'introducció dels usuaris</p>";
+                        }else{
+                            $idRepo=$con_repos->getLast();
+                            $idRol=$con_rols->getLast();
+                            $permis=new Permis($idRepo,$idRol);
+                            if(!$con_permisos->save($permis)){
+                                $numerrors++;
+                                echo "<p>ERROR: Ha succeït un error en l'introducció dels usuaris</p>";
+                            }
                         }
                     }
-                }
-                if($numerrors==0){
+                    if($numerrors==0){
+                        echo "<p>Element afegit correctament.</p>";
+                        $ok=1;
+                    }else{
+                        echo "<p>ERROR: Ha succeït un error en l'introducció dels usuaris</p>";
+                    }
+                }else{
                     echo "<p>Element afegit correctament.</p>";
                     $ok=1;
-                }else{
-                    echo "<p>ERROR: Ha succeït un error en l'introducció dels usuaris</p>";
                 }
             }else{
-                echo "<p>Element afegit correctament.</p>";
-                $ok=1;
+                $idRepo=$con_repos->getLast();
+                $repositori->setId($idRepo);
+                $con_repos->delete($repositori);
+                echo "<p>ERROR: No s'ha pogut crear l'usuari ftp.</p>";
             }
 	}
 }else{

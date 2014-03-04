@@ -1,23 +1,53 @@
 <!DOCTYPE html>
 
 <?php
-    require_once './lib/base.inc.php';
+    $isadmin=0;
+    ini_set('display_errors', 1);
+    if(isset($_SERVER['PHP_AUTH_USER'])){
+        $user=$_SERVER['PHP_AUTH_USER'];
+    }else{
+        $user="avilalta";
+    }
 
+    require_once './lib/base.inc.php';
+    
+    $con_user = new RolsDao();
+    $rol=$con_user->getByLDAPname($user);
+    if($rol){
+        $existeix=true;
+        $isadmin=$rol->getIsAdmin();
+    }else{
+        $existeix=false;
+    }
+
+    $con_permis = new PermisosDAO();
+    
+    if($isadmin){
+        $consulta=$con_permis->getAll();
+        if($consulta){
+            $permisos=$consulta[0];
+            $repositoris=$consulta[1];
+        }
+    }else{
+        if($rol){
+            $consulta=$con_permis->getByRol($rol->getId());
+            if($consulta){
+                $permisos=$consulta[0];
+                $repositoris=$consulta[1];
+            }
+        }
+    }
+    
     if(!isset($_GET['idrepo'])){
-        $idrepo=0;
+        if(isset($repositoris)){
+            $idrepo=$repositoris[0]->getId();
+        }else{
+            $idRepo=0;
+        }
     }else{
         $idrepo=$_GET['idrepo'];
     }
-    
-    $con_permis = new PermisosDAO();
-    
-    $consulta=$con_permis->getByRol(1);
-    
-    $permisos=$consulta[0];
-    $repositoris=$consulta[1];
 
-    
-    $isadmin=1;
 ?>
 
 <html>
@@ -28,7 +58,7 @@
         <script src="./lib/jquery/jquery-1.11.0.js"></script>
         <script lang="javascript">
             $(document).ready(function() {
-                <?php if(!$isadmin){?>
+                <?php if(!$isadmin && $consulta){?>
                 $("#inforepo").load("./inforepo.php?idrepo=<?php echo $repositoris[0]->getId();?>");
                 $("#content").load("./content.php?idrepo=<?php echo $repositoris[0]->getId();?>");
                 <?php }else{ ?>
@@ -36,14 +66,20 @@
                 <?php }?>
             });
             
-            function carrega(){
-                <?php if(!$isadmin){?>
+            function carrega(repo){
                 var seleccio = document.getElementById("selectrep");
                 var id = seleccio.options[seleccio.selectedIndex].value;
+                <?php if(!$isadmin){?>
                 $("#inforepo").load("./inforepo.php?idrepo="+id);
                 $("#content").load("./content.php?idrepo="+id);
                 <?php }else{ ?>
-                $("#admin").load("./admin/index.php");
+                if(repo){
+                    $("#inforepo").load("./inforepo.php?idrepo="+id);
+                    $("#opcionsadmin").load("./admin/index.php");
+                    $("#admin").load("./content.php?idrepo="+id);
+                }else{
+                    $("#opcionsadmin").load("./admin/index.php");
+                }
                 <?php }?>
             }
             
@@ -103,38 +139,53 @@
         </script>
     </head>
     <body>
-        <div id="head" name=""head>
+        <div id="head" name="head">
             <p style="text-align: right"><img src="./img/ub.jpg" style="height: 80px;" /></p>
             <h1>Servidor d'escaneig de la UB</h1>
-            <h2>Benvingut, pepito.</h2>
-<?php if(!$isadmin){?>
-            <table>
-                <tr>
-                    <td style="font-weight: bold;">Unitats a les que tens accés: </td>
-                    <td>
-                        <?php
-                        if(sizeof($repositoris)>0){?>
-                        <select id="selectrep" name="selectrep" onchange="carrega();">
+            <?php if($existeix){?>
+                <h2>Benvingut, <?php
+                if($rol->getShownName()!="" && $rol->getShownName()!=null){
+                    echo $rol->getShownName();
+                }else{
+                    echo $rol->getLdapName();
+                }
+                ?>.</h2>
+                <table>
+                    <tr>
+                        <td style="font-weight: bold;">Unitats a les que tens accés: </td>
+                        <td>
                             <?php
-                            foreach($repositoris as $repositori){
-                            ?>
-                                <option value="<?php echo $repositori->getId();?>"><?php echo $repositori->getNom();?></option>
-                            <?php    
-                            }
-                            ?>
-                            </select>
-                        <?php }else{?>
-                        Actualment no tens accés a cap repositori.
-                        <?php }?>
-                    </td>
-                </tr>
-            </table>
-            <div id="inforepo" name="inforepo"></div>
-        </div>   
-        <div id="content" name="content"></div>
-<?php }else{?>   
+                            if(isset($repositoris)){?>
+                            <select id="selectrep" name="selectrep" onchange="carrega(<?php echo "true";?>);">
+                                <?php
+                                if($isadmin){
+                                    echo "<option value=\"0\">*</option>";
+                                }
+                                foreach($repositoris as $repositori){
+                                ?>
+                                    <option value="<?php echo $repositori->getId();?>"><?php echo $repositori->getNom();?></option>
+                                <?php    
+                                }
+                                ?>
+                                </select>
+                            <?php }else{?>
+                            Actualment no tens accés a cap repositori.
+                            <?php }?>
+                        </td>
+                    </tr>
+                </table>
+                <div id="inforepo" name="inforepo"></div>
+            </div>   
+    <?php if(!$isadmin){?>
+            <div id="content" name="content"></div>
+    <?php }else{?>   
+            </div>
+            <div id="opcionsadmin" name="opcionsadmin"></div>
+            <div id="admin" name="admin"></div>
+    <?php }?>
+            <?php }else{ ?>
+            <h2>Aquest usuari no està a la base de dades. Contacta amb l'administrador.</h2>
         </div>
-        <div id="admin" name="admin"></div>
-<?php }?>
+            <?php }?>
     </body>
 </html>

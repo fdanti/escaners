@@ -67,7 +67,7 @@ if(isset($_POST['usuaris'])){
 
 if($numerrors==0){
     
-        $repositori = new Repositori($idRepo, $ip, $nom, $notes);
+        $repositori = new Repositori($idRepo,"", $ip, $nom, $notes);
 	   
 	if(!($resultat=$con_repos->save($repositori))){
             echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";

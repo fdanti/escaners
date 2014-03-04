@@ -4,7 +4,7 @@ Aquest document conté tots els passos seguits per configurar la base de dades i
 Creem l'usuari web:
     mysql> CREATE USER web IDENTIFIED BY 'Hj_87a'
 Li donem els permisos bàsics:
-    GRANT INSERT, DELETE, SELECT ON escaners.* TO web;
+    GRANT INSERT, DELETE, SELECT, UPDATE ON escaners.* TO web;
     FLUSH PRIVILEGES;
 
 Creem les taules de la base de dades (pot ser que durant la implementació alguna d'aquestes instruccions sigui modificada)
@@ -46,3 +46,7 @@ Creem les taules de la base de dades (pot ser que durant la implementació algun
         ->   CONSTRAINT `fk_permisos_repositori` FOREIGN KEY (`repositori_id`) REFERENCES `repositori` (`idRepo`) ON DELETE CASCADE ON UPDATE CASCADE
         -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     Query OK, 0 rows affected (0.13 sec)
+
+Afegeixo un usuari administrador amb el meu nom (avilalta)
+
+    INSERT INTO rol (ldapname,isAdmin) VALUES ("avilalta",1);

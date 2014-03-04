@@ -54,6 +54,7 @@ class CTRolsFtp {
 class CTRepos {
     const NAME_TABLE        = "repositori"; //Nom de la Taula de Repositoris
     const NAME_COL_ID       = "idRepo";
+    const NAME_COL_PSW      = "password";
     const NAME_COL_IPSCAN   = "ipscan";
     const NAME_COL_NOM      = "nom";
     const NAME_COL_NOTES    = "observacions";

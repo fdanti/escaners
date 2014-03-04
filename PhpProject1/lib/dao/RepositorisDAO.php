@@ -35,8 +35,9 @@ class RepositorisDAO {
         /* Generem la query usant constants */
         if($vo->getId()==""){
             $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
-                    " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.")".
-                    " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\")";
+                    " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.", ".CTRepos::NAME_COL_PSW.")".
+                    " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\", \"".$vo->getPwd()."\")";
+            echo $sql;
         }else{
             $sql = "UPDATE ".CTRepos::NAME_TABLE." ".
             "SET ".CTRepos::NAME_COL_IPSCAN."=\"".$vo->getIPscan()."\", ".
@@ -61,6 +62,7 @@ class RepositorisDAO {
        if (mysql_num_rows($result) > 0) {
             $row = mysql_fetch_assoc($result);
             $repositori = new Repositori($row[CTRepos::NAME_COL_ID], 
+                         $row[CTRepos::NAME_COL_PSW],
                          $row[CTRepos::NAME_COL_IPSCAN],
                          $row[CTRepos::NAME_COL_NOM],
                          $row[CTRepos::NAME_COL_NOTES]);
@@ -79,6 +81,7 @@ class RepositorisDAO {
            for ($i = 0; $i < mysql_num_rows($result); $i++) {
                $row = mysql_fetch_assoc($result);
                $repositori[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
+                         $row[CTRepos::NAME_COL_PSW],
                          $row[CTRepos::NAME_COL_IPSCAN],
                          $row[CTRepos::NAME_COL_NOM],
                          $row[CTRepos::NAME_COL_NOTES]);

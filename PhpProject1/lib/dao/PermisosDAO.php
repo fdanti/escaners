@@ -61,7 +61,6 @@ class PermisosDAO {
         // TODO: provar
         /* Generem la query usant constants */
         $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE." INNER JOIN ".  CTRepos::NAME_TABLE." ON ".CTPermisos::NAME_TABLE.".".CTPermisos::NAME_COL_IDREPO."=".CTRepos::NAME_TABLE.".".CTRepos::NAME_COL_ID." WHERE ".CTPermisos::NAME_COL_IDROL." = $idRol";
-
         /* Executem la query i retornem el resultat */
         $result=$this->execute($sql);
         
@@ -71,7 +70,8 @@ class PermisosDAO {
                $row = mysql_fetch_assoc($result);
                $permis[$i] = new Permis($row[CTPermisos::NAME_COL_IDREPO],
                        $row[CTPermisos::NAME_COL_IDROL]);
-               $repo[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
+               $repo[$i] = new Repositori($row[CTRepos::NAME_COL_ID],
+                            $row[CTRepos::NAME_COL_PSW],
                             $row[CTRepos::NAME_COL_IPSCAN],
                             $row[CTRepos::NAME_COL_NOM],
                             $row[CTRepos::NAME_COL_NOTES]);
@@ -84,6 +84,35 @@ class PermisosDAO {
        
        return false;
        
+    }
+    
+    public function getAll() {
+        // TODO: provar
+        /* Generem la query usant constants */
+        $sql = "SELECT * FROM ".CTPermisos::NAME_TABLE." INNER JOIN ".  CTRepos::NAME_TABLE." ON ".CTPermisos::NAME_TABLE.".".CTPermisos::NAME_COL_IDREPO."=".CTREPOS::NAME_TABLE.".".CTREPOS::NAME_COL_ID." GROUP BY ".CTPermisos::NAME_COL_IDREPO;
+
+        /* Executem la query i retornem el resultat */
+        $result=$this->execute($sql);
+        
+       /* Si obtenim resultats de la query, posem-los en un VO de tipus Permisos */
+       if (mysql_num_rows($result) > 0) {
+           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+               $row = mysql_fetch_assoc($result);
+               $permis[$i] = new Permis($row[CTPermisos::NAME_COL_IDREPO],
+                       $row[CTPermisos::NAME_COL_IDROL]);
+               $repo[$i] = new Repositori($row[CTRepos::NAME_COL_ID], 
+                            $row[CTRepos::NAME_COL_PSW],
+                            $row[CTRepos::NAME_COL_IPSCAN],
+                            $row[CTRepos::NAME_COL_NOM],
+                            $row[CTRepos::NAME_COL_NOTES]);
+           }
+       $retorn[0]=$permis;
+       $retorn[1]=$repo;
+       
+       return $retorn;
+       }
+       
+       return false;
     }
     
     public function getByRepo($idRepo) {

@@ -34,7 +34,36 @@ class RolsFtpDAO {
        }
        return $rolFtp;
     }
-   
+    /*
+     * Donat un objecte de tipus RolFtp,
+     *  ·L'afegeix a la taula corresponent de la DB només amb els camps imprescindibles(pureFTPD)
+     *  ·N'obté el ID de sistema (autogenerat en DB)
+     *  ·En crea les carpetes necessàries
+     */
+    public function firstSave(&$vo){
+        $sql="INSERT INTO " . CTRolsFtp::NAME_TABLE . " ("
+                . CTRolsFtp::NAME_COL_USER . ", "
+                . CTRolsFtp::NAME_COL_DIR . ", "
+                . CTRolsFtp::NAME_COL_IPACCESS . ", "
+                . CTRolsFtp::NAME_COL_PASSWORD
+            . ") VALUES (\""
+                . $vo->getUser() . "\", \""
+                . $vo->getDir() . "\", \""
+                . $vo->getIpaccess() . "\", \""
+                . $vo->getPassword()
+            . "\")";
+        $result = mysql_query($sql, $this->conn) or die (mysql_error());
+        
+        /* Recupero el RolFTP de la DB amb el camp ID autogenerat*/
+        /* @var $rolFTP RolFtp */
+        $rolFTP = getByUser( $vo->getUser() );
+        
+        /* Creo la carpeta en el FS amb els permisos adequats  */
+        createFTP($rolFTP);
+        
+        /* Actualitzo les regles del firewallper incorporar la nova IP i eliminar les obsoletes */
+        syncFirewall();
+    }
     /*
      * Donat un objecte de tipus RolFtp,
      *  ·L'afegeix a la taula corresponent de la DB (pureFTPD)

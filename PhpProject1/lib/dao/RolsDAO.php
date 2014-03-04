@@ -85,8 +85,8 @@ class RolsDAO {
      */
     public function getByLDAPname($name) {
         /* Generem la query usant constants */
-        $sql = "SELECT * FROM " + CTRols::NAME_TABLE +
-                " WHERE " + CTRols::NAME_COL_LDAPNAME + "= $name";
+        $sql = "SELECT * FROM ".CTRols::NAME_TABLE.
+                " WHERE ".CTRols::NAME_COL_LDAPNAME."=\"".$name."\"";
 
         /* Executem la query i retornem el resultat */
         $result=$this->execute($sql);
