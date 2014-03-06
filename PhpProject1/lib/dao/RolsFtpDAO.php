@@ -135,7 +135,7 @@ class RolsFtpDAO {
         //exec( ConfigFS::SCRIPT_FIREWALL, $return_val);
         //return $return_val;
         echo "sudo ". ConfigFS::SCRIPT_FIREWALL . "<br>";
-        echo shell_exec("sudo ". ConfigFS::SCRIPT_SCRIPT_FIREWAL );
+        echo shell_exec("sudo ". ConfigFS::SCRIPT_FIREWAL );
     }
     
     /*
