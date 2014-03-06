@@ -8,6 +8,7 @@ require_once '../../lib/dao/RolsFtpDAO.php';
 require_once '../../lib/model/Repositori.php';
 require_once '../../lib/model/Rol.php';
 require_once '../../lib/model/Permis.php';
+require_once '../../lib/model/RolFtp.php';
 
 ini_set('display_errors', 1);
 

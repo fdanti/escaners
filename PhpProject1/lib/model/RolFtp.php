@@ -79,6 +79,10 @@ class FtpRol {  //TODO: aquesta classe extends Rol. Potser usar-ho ens estalviar
     }
 
     /* Setters auto-generats */
+    public function setUid($id) {
+        $this->Uid=$id;
+    }
+    
     public function setPassword($Password) {
         $this->Password = $Password;
     }

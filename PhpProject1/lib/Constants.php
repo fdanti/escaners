@@ -33,7 +33,7 @@ class CTRols {
  * Constants (ctt) de la taula rolsFtp
  */
 class CTRolsFtp {
-    const NAME_TABLE        = "rolFtp";       //Nom de la Taula de RolsFTP
+    const NAME_TABLE        = "rolftp";       //Nom de la Taula de RolsFTP
     const NAME_COL_ID       = "Uid";
     const NAME_COL_USER     = "User";
     const NAME_COL_PASSWORD = "Password";

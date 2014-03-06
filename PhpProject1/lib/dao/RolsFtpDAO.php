@@ -23,13 +23,19 @@ class RolsFtpDAO {
        
        /* Si obtenim resultats de la query, posem-los en un VO de tipus RolFtp */
        if (mysql_num_rows($result) > 0) {
-           for ($i = 0; $i < mysql_num_rows($result); $i++) {
+           if(mysql_num_rows($result) == 1) {
                $row = mysql_fetch_assoc($result);
-               
-               //Creem un objecte de tipus RolFtp amb les dades de la DB
-               $rolFtp[$i] = new RolFtp($row[CTRolsFtp::NAME_COL_USER], $row[CTRolsFtp::NAME_COL_PASSWORD],
-                       $row[CTRolsFtp::NAME_COL_IPACCESS], $row[CTRolsfTP::NAME_COL_DIR], $row[CTRolsFtp::NAME_COL_UID], $row[CTRolsFtp::STATUS], $row[CTRolsFtp::NAME_COL_GID],
-                       $row[CTRolsFtp::NAME_COL_ULBANDWIDTH], $row[CTRolsFtp::NAME_COL_DLBANDWIDTH], $row[CTRolsFtp::NAME_COL_COMMENT], $row[CTRolsFtp::NAME_COL_QUOTASIZE], $row[CTRolsFtp::NAME_COL_QUOTAFILES]);
+               $rolFtp = new FtpRol($row[CTRolsFtp::NAME_COL_USER], $row[CTRolsFtp::NAME_COL_PASSWORD],
+                        $row[CTRolsFtp::NAME_COL_IPACCESS], $row[CTRolsfTP::NAME_COL_DIR]);
+               $rolFtp->setUid($row[CTRolsFtp::NAME_COL_ID]);
+           }else{
+                for ($i = 0; $i < mysql_num_rows($result); $i++) {
+                    $row = mysql_fetch_assoc($result);
+
+                    //Creem un objecte de tipus RolFtp amb les dades de la DB
+                    $rolFtp[$i] = new FtpRol($row[CTRolsFtp::NAME_COL_USER], $row[CTRolsFtp::NAME_COL_PASSWORD],
+                            $row[CTRolsFtp::NAME_COL_IPACCESS], $row[CTRolsfTP::NAME_COL_DIR]);
+                }
            }
        }
        return $rolFtp;
@@ -56,13 +62,13 @@ class RolsFtpDAO {
         
         /* Recupero el RolFTP de la DB amb el camp ID autogenerat*/
         /* @var $rolFTP RolFtp */
-        $rolFTP = getByUser( $vo->getUser() );
+        $rolFTP = $this->getByUser( $vo->getUser() );
         
         /* Creo la carpeta en el FS amb els permisos adequats  */
-        createFTP($rolFTP);
+        $this->createFTP($rolFTP);
         
         /* Actualitzo les regles del firewallper incorporar la nova IP i eliminar les obsoletes */
-        syncFirewall();
+        $this->syncFirewall();
     }
     /*
      * Donat un objecte de tipus RolFtp,
@@ -76,13 +82,13 @@ class RolsFtpDAO {
         
         /* Recupero el RolFTP de la DB amb el camp ID autogenerat*/
         /* @var $rolFTP RolFtp */
-        $rolFTP = getByUser( $vo->getUser() );
+        $rolFTP = $this->getByUser( $vo->getUser() );
         
         /* Creo la carpeta en el FS amb els permisos adequats  */
-        createFTP($rolFTP);
+        $this->createFTP($rolFTP);
         
         /* Actualitzo les regles del firewallper incorporar la nova IP i eliminar les obsoletes */
-        syncFirewall();
+        $this->syncFirewall();
         
     }
     
@@ -123,8 +129,15 @@ class RolsFtpDAO {
          *  ·Crear la carpeta a on toca
          *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
         $return_val='';
-        exec( ConfigFS::SCRIPT_FTP .  $vo->getDir() . $vo->getUid(), $return_val);
-        return $return_val;
+        $output='';
+
+        //echo ConfigFS::SCRIPT_FTP ." ". $vo->getUser() ." ". $vo->getUid();
+        //exec("sh ". ConfigFS::SCRIPT_FTP ." ". $vo->getUser() ." ". $vo->getUid(), $output, $return_val);
+        //print_r($output);
+        //echo($return_val);
+        echo "sudo sh ". ConfigFS::SCRIPT_FTP ." ". $vo->getUser() ." ". $vo->getUid()."<br>";
+        echo shell_exec("sudo sh ". ConfigFS::SCRIPT_FTP ." ". $vo->getUser() ." ". $vo->getUid());
+        //return $return_val;
     }
     
     /* Invoca un script que llegeix les ipaccess de la taula MySQl i obre el firewall convenientment */
@@ -152,7 +165,7 @@ class RolsFtpDAO {
     public function getByUser($name) {
         /* Generem la query usant constants */
         $sql = "SELECT * FROM " . CTRolsFtp::NAME_TABLE
-                . " WHERE " . CTRolsFtp::NAME_COL_User . "= $name";
+                . " WHERE " . CTRolsFtp::NAME_COL_USER . "=\"".$name."\"";
 
         /* Executem la query i retornem el resultat */
         return $this->execute($sql);

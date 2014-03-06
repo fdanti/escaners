@@ -37,7 +37,6 @@ class RepositorisDAO {
             $sql = "INSERT INTO ".CTRepos::NAME_TABLE.
                     " (".CTRepos::NAME_COL_IPSCAN.", ".CTRepos::NAME_COL_NOM.", ".CTRepos::NAME_COL_NOTES.", ".CTRepos::NAME_COL_PSW.")".
                     " VALUES (\"".$vo->getIPscan()."\", \"".$vo->getNom()."\", \"".$vo->getNotes()."\", \"".$vo->getPwd()."\")";
-            echo $sql;
         }else{
             $sql = "UPDATE ".CTRepos::NAME_TABLE." ".
             "SET ".CTRepos::NAME_COL_IPSCAN."=\"".$vo->getIPscan()."\", ".
