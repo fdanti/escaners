@@ -122,16 +122,20 @@ class RolsFtpDAO {
         /* Invoco un shel script amb drets de sudo que farà:
          *  ·Crear la carpeta a on toca
          *  ·Donar-la a la ID de sistema $vo.i assignar-la al */
-        $return_val='';
-        exec( ConfigFS::SCRIPT_FTP .  $vo->getDir() . $vo->getUid(), $return_val);
-        return $return_val;
+        //$return_val='';
+        //exec( ConfigFS::SCRIPT_FTP .  $vo->getDir() . $vo->getUid(), $return_val);
+        //return $return_val;
+        echo "sudo ". ConfigFS::SCRIPT_FTP ." ". $vo->getUser() ." ". $vo->getUid()."<br>";
+        echo shell_exec("sudo ". ConfigFS::SCRIPT_FTP ." ". $vo->getUser() ." ". $vo->getUid());
     }
     
     /* Invoca un script que llegeix les ipaccess de la taula MySQl i obre el firewall convenientment */
     public function syncFirewall() {
-        $return_val='';
-        exec( ConfigFS::SCRIPT_FIREWALL, $return_val);
-        return $return_val;
+        //$return_val='';
+        //exec( ConfigFS::SCRIPT_FIREWALL, $return_val);
+        //return $return_val;
+        echo "sudo ". ConfigFS::SCRIPT_FIREWALL . "<br>";
+        echo shell_exec("sudo ". ConfigFS::SCRIPT_SCRIPT_FIREWAL );
     }
     
     /*
