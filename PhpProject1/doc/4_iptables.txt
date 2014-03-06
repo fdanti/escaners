@@ -1,6 +1,3 @@
-TODO: pensar la forma de que es crei una regla iptables que permeti l'accés
-    al FTP des de les ipaccess que tenim a la taula rolsftp
-
 Creo un firewall de iptables pel servidor (/etc/init.d/CIUB_iptables) amb les regles:
     Accept ssh des de 21.0/24
     Accept https i http des de 0.0/16
@@ -13,8 +10,26 @@ Crearem un script que consultarà al MySQL i farà la regla per obrir als FTP
     ·Fem un usuari de només podrà consultar les IP sobre la taula escaners.rolftp
         GRANT SELECT(ipaccess) ON escaners.rolftp TO 'consulta'@'localhost';
     ·Fem un script que farà la consulta a la taula i executarà la següent regla per cadascun dels resultats $i
-        mysql -u consulta -D escaners -e "select ipaccess from rolftp;" -B -N
+        mysql -u consulta -D escaners -e "select distinct ipaccess from rolftp;" -B -N
     ·Creem un script /serveis/ftp/iptablesFTP.sh que permetrà crear excepcions de firewall des del PHP
         chmod 701 /serveis/ftp/iptablesFTP.sh
     ·Afegim el script /serveis/ftp/iptablesFTP.sh en el fitxer de sudoers /etc/sudoers.d/createFtp:
         www-data        ALL = NOPASSWD: /serveis/ftp/iptablesFTP.sh
+
+Contingut del fitxer iptablesFTP.sh:
+################################################################################################
+#!/bin/bash
+#Consultarà les IP des de les que s'han de permetre connexions FTP i en crearà una regla IPTABLES
+
+#Obtenim la llista de escaners que hi ha a la DB
+ESCANERS=`mysql -u consulta -D escaners -e "SELECT DISTINCT ipaccess FROM rolftp;" -B -N`;
+
+#Netegem les regles (resetegem el firewall)
+/etc/init.d/CIUB_iptables start;
+
+#Creem les excepcions pels escaners
+for i in $ESCANERS
+        do
+                /sbin/iptables -A INPUT -p tcp -s $i -d 161.116.118.238 --dport 21 -j ACCEPT;
+done
+################################################################################################
