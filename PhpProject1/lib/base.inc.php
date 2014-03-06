@@ -38,7 +38,7 @@ class ConfigDB {
 //    FILE CONFIGURATION
 // -----------------------------
 class ConfigFS {
-    const PATH      = "/serveis/ftp/data/";             //PATH a l'arrel dels escanejos
+    const PATH      = "./ftp_folders/";             //PATH a l'arrel dels escanejos
     const SCRIPT_FTP        =  "/serveis/ftp/createFTP.sh"; //Script que genera les carpetes amb els permisos adequats
     const SCRIPT_FIREWALL   = "/serveis/ftp/iptablesFTP.sh";//Script que fa la excepció al firewall per les IP de la taula
 }

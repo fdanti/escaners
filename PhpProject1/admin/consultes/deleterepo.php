@@ -4,9 +4,13 @@ require_once './configDB.php';
 require_once '../../lib/dao/RepositorisDAO.php';
 require_once '../../lib/model/Repositori.php';
 
+require_once '../../lib/dao/RolsFtpDAO.php';
+require_once '../../lib/model/RolFtp.php';
+
 ini_set('display_errors', 1);
 
 $con_repos = new RepositorisDAO();
+$con_ftp = new RolsFtpDAO();
 
 $error="";
 $ok=0;
@@ -15,13 +19,18 @@ if(isset($_GET['id'])){
 
     $id=$_GET['id'];
 
-    $repositori = new Repositori($id,"",0,0,"");
+    $repositori = $con_repos->get($id);
+    $ftp = $con_ftp->getByUser($repositori->getNom());
 
-    if(!($resultat=$con_repos->delete($repositori))){
-            echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";
+    if($con_ftp->delete($ftp)){
+        if(!($resultat=$con_repos->delete($repositori))){
+                echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";
+        }else{
+                echo "<p>Element eliminat correctament.</p>";
+                $ok=1;
+        }
     }else{
-            echo "<p>Element eliminat correctament.</p>";
-            $ok=1;
+        echo "<p style=\"color:#662222\">ERROR: ".$resultat."</p";
     }
 	
 }else{

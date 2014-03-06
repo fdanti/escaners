@@ -25,7 +25,7 @@
                 <tr>
                     <td width="50%" style="padding:5px;"><?php echo $usuari->getShownName();?></td>
                     <td width="30%" style="padding:5px;"><?php echo $usuari->getLdapName();?></td>
-                    <td width="20%" style="padding:5px;"><img src="../img/edit.png" height="25" onclick="carregaDiv('#users<?php echo $usuari->getId();?>', './admin/user.php?idRol=<?php echo $usuari->getId();?>');" /><img src="../img/delete.png" height="25" onclick="carregaDivDelete('#help', './admin/consultes/deleterol.php?id=<?php echo $usuari->getId();?>','llista<?php echo $usuari->getId();?>')" /></td>
+                    <td width="20%" style="padding:5px;"><img src="../img/edit.png" height="25" onclick="carregaDiv('#users<?php echo $usuari->getId();?>', './admin/user.php?idRol=<?php echo $usuari->getId();?>');" /><img src="../img/delete.png" height="25" onclick="carregaDivDelete('#help', './admin/consultes/deleteuser.php?id=<?php echo $usuari->getId();?>','llista<?php echo $usuari->getId();?>')" /></td>
                 </tr>
             </table>
             <div id="users<?php echo $usuari->getId();?>" name="users<?php echo $usuari->getId();?>"></div>

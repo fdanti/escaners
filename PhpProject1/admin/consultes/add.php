@@ -84,13 +84,13 @@ if($numerrors==0){
                         }
                     }
                     if($numerrors==0){
-                        echo "<p>Element afegit correctament.</p>";
+                        echo "<p>Element afegit correctament.<br />Paràmatres per a la connexió ftp:<br /> Usuari: ".$repositori->getNom()."<br /> Contrassenya: ".$repositori->getPwd()."</p>";
                         $ok=1;
                     }else{
                         echo "<p>ERROR: Ha succeït un error en l'introducció dels usuaris</p>";
                     }
                 }else{
-                    echo "<p>Element afegit correctament.</p>";
+                    echo "<p>Element afegit correctament.<br />Paràmatres per a la connexió ftp:<br /> Usuari: ".$repositori->getNom()."<br /> Contrassenya: ".$repositori->getPwd()."</p>";
                     $ok=1;
                 }
             }else{

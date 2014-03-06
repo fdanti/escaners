@@ -1,7 +1,7 @@
 <div align="center">
     <h2>Afegir nou escàner</h2>
     <div id="help"><p style="padding: 0px; margin:5px;">Introdueix a continuació les dades de l'escàner:</p></div>
-    <form id="form1" name="form1" method="POST"  onsubmit="return submitForm('add.php','#help',false);">
+    <form id="form1" name="form1" method="POST"  onsubmit="return submitForm('add.php','#help',true);">
         <table border="0">
             <tr>
                 <td align="right" style="padding-right: 30px;">Direcció ip de l'escàner:</td>

@@ -12,10 +12,10 @@ $con_repos = new RepositorisDAO();
 
 $repositori=$con_repos->get($idrepo);
         
-$path = './files/id'.$repositori->getId().'/';
-$dir = opendir($path);
+//$path = './files/id'.$repositori->getId().'/';
+$dir = opendir(ConfigFS::PATH.$repositori->getNom());
 while($file=readdir($dir)){
-    if(!is_dir($file)){
+    if(!is_dir($file) && $file[0]!='.'){
         $data[] = array($file, date("Y-m-d H:i:s",filemtime($path.'/'.$file)));
         $files[] = $file;
         $dates[] = date("Y-m-d H:i:s",filemtime($path.'/'.$file));
@@ -30,7 +30,7 @@ if(isset($data)){
     <?php
     foreach($data as $fitxer){?>
                         <tr>
-                            <td width="70%"><a href="<?php echo $path;?><?php echo $fitxer[0];?>" target="_blank"><?php echo $fitxer[0];?></a></td>
+                            <td width="70%"><a href="<?php echo ConfigFS::PATH.$repositori->getNom()."/";?><?php echo $fitxer[0];?>" target="_blank"><?php echo $fitxer[0];?></a></td>
                             <td width="30%"><?php echo $fitxer[1]?></td>
                         </tr>
     <?php }?>

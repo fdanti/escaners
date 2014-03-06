@@ -23,11 +23,11 @@ $repositori = $con_repo->get($idRepo);
         <table border="0">
             <tr>
                 <td align="right" style="padding-right: 30px;">Direcció ip de l'escàner:</td>
-                <td><input type="text" id='ip' name='ip' size="15" maxlength="15" value="<?php echo $repositori->getIpScan();?>" /></td>
+                <td><input type="text" id='ip' name='ip' size="15" maxlength="15" disabled="true" value="<?php echo $repositori->getIpScan();?>" /></td>
             </tr>
             <tr>
                 <td align="right" style="padding-right: 30px;">Nom per a mostrar:</td>
-                <td><input type="text" id='nom' name='nom' size="32" maxlength="32" value="<?php echo $repositori->getNom();?>" /></td>
+                <td><input type="text" id='nom' name='nom' size="32" maxlength="32" disabled="true" value="<?php echo $repositori->getNom();?>" /></td>
             </tr>
             <tr>
                 <td align="right" style="padding-right: 30px;">Notes addicionals:</td>

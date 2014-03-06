@@ -144,4 +144,14 @@ class RolsDAO {
        
        return false;
     }
+    
+    //Remove a record form DB
+    public function delete(&$vo) {
+        /* Generem la query usant constants */
+
+        $sql = "DELETE FROM ".CTRols::NAME_TABLE." WHERE ".CTRols::NAME_COL_ID."=".$vo->getId();
+
+        /* Executem la query i retornem el resultat */
+        return $this->execute($sql);
+    }
 }
