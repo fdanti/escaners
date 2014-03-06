@@ -25,7 +25,7 @@
                         }else{
                             echo $rol->getLdapName();
                         };?>
-                        <img src="../img/delete.png" height="15" onclick="carregaDivDelete('#helpedit', './admin/consultes/deletepermis.php?idRol=<?php echo $rol->getId();?>&idRepo=<?php echo $idRepo;?>','rol<?php echo $rol->getId();?>')" style='cursor: pointer;' /></td>
+                        <img src="../img/delete.png" height="15" onclick="carregaDivDelete('#help', './admin/consultes/deleteadmin.php?idRol=<?php echo $rol->getId();?>','rol<?php echo $rol->getId();?>')" style='cursor: pointer;' /></td>
             <?php
                 if($i%4==0 && $i!=0){
                     echo "</tr><tr>";
