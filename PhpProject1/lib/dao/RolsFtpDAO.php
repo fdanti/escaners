@@ -82,7 +82,7 @@ class RolsFtpDAO {
         createFTP($rolFTP);
         
         /* Actualitzo les regles del firewallper incorporar la nova IP i eliminar les obsoletes */
-        syncFirewall();
+        //TODO: descomentar això//syncFirewall();
         
     }
     
