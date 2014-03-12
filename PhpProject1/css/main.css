@@ -77,3 +77,12 @@ td{
     border: thin solid #000000;
     border-top:none;
 }
+
+.titoltaula{
+    background-color: #CCCCFF;
+    padding:10px;
+}
+
+.elementtaula{
+    padding-left:10px;
+}

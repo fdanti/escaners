@@ -10,5 +10,5 @@
 </div>
 
 <div id="contentadmin" name="contentadmin">
-
+    <h3 style="text-align: center;">Benvingut a l'administració del servei d'escaneig de la UB. Selecciona una de les opcions del menú.</h3>
 </div>

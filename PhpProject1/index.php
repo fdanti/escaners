@@ -75,10 +75,9 @@
                 <?php }else{ ?>
                 if(repo){
                     $("#inforepo").load("./inforepo.php?idrepo="+id);
-                    $("#opcionsadmin").load("./admin/index.php");
-                    $("#admin").load("./content.php?idrepo="+id);
+                    $("#contentadmin").load("./content.php?idrepo="+id);
                 }else{
-                    $("#opcionsadmin").load("./admin/index.php");
+                    $("#admin").load("./admin/index.php");
                 }
                 <?php }?>
             }

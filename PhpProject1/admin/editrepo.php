@@ -39,6 +39,8 @@ $repositori = $con_repo->get($idRepo);
             </tr>
         </table>
         <input type="hidden" id="idRepo" name="idRepo" value="<?php echo $idRepo;?>" />
+        <input type="hidden" id='nom' name='nom' value="<?php echo $repositori->getNom();?>" />
+        <input type="hidden" id='ip' name='ip' value="<?php echo $repositori->getIpScan();?>" />
         <input id="submit" name="submit" type="submit" value="Modificar" style="margin-top:20px; margin-left:200px;" />
     </form>
 
