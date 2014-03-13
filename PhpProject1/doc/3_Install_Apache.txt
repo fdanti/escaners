@@ -54,3 +54,30 @@ Modifico el fitxer lib/base_inc.php per als paràmetres de connexió del servido
     }
 
 Faig les mateixes modificacions al fitxer /admin/consultes/ConfigDB.php
+
+[fdanti: Afegit el 13/3/14]
+Fem un certificat autosignat pel domini escanerscc.ub.edu.
+    Així almenys els navegadors poden afegir-lo com a excepció permanent
+
+Creem el certificat:
+    mkdir /serveis/www/www_certs; cd /serveis/www/www_certs; chmod 700 .;
+    openssl genrsa -out escanerscc.ub.edu.key 1024
+    openssl req -new -key escanerscc.ub.edu.key -out escanerscc.ub.edu.csr
+        Country Name (2 letter code) [AU]:ES
+        State or Province Name (full name) [Some-State]:Barcelona
+        Locality Name (eg, city) []:Barcelona
+        Organization Name (eg, company) [Internet Widgits Pty Ltd]:Universitat de Barcelona
+        Organizational Unit Name (eg, section) []:Unitat Tecnica Centre Ciutat
+        Common Name (e.g. server FQDN or YOUR name) []:escanerscc.ub.edu
+        Email Address []:fdanti@ub.edu
+    openssl x509 -req -days 3650 -in escanerscc.ub.edu.csr -signkey escanerscc.ub.edu.key -out escanerscc.ub.edu.crt
+        Nota: Tot el referent a openssl es pot fer amb una única comanda (mirar documentació en altres projectes)
+Posem el certificat a les estructures del Apache:
+    cp escanerscc.ub.edu.crt /etc/ssl/certs/escanerscc.ub.edu.crt
+    cp escanerscc.ub.edu.key /etc/ssl/private/escanerscc.ub.edu.key
+Editem la configuració del site [/serveis/www/site_apache_ssl] per afegir els nous certificats:
+    SSLCertificateFile    /etc/ssl/certs/escanerscc.ub.edu.crt
+    SSLCertificateKeyFile /etc/ssl/private/escanerscc.ub.edu.key
+    
+
+
