@@ -34,3 +34,12 @@ Creem l'espai de disc extra pel servei de FTP.
     ·Creem la carpeta arrel de serveis i ftp i muntem el nou device:
         mkdir /serveis/; mkdir /serveis/ftp;
         mount -a
+
+Ajustem la hora del servidor amb ntp client
+    ·Instal·lem el ntpdate
+        aptitude install ntpdate
+    ·Creem un crontabb que sincronitzi la hora del servidor cada dia a les 6h.
+        Fitxer /etc/cron.d/escaners:
+            # /etc/cron.d/escaners: crontab fragment for escaners
+            #Neteja els shares FTP dels escaners cada dia a les 07:00
+            00 07 * * *     root   find /serveis/ftp/data -type f -delete            
