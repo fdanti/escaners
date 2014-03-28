@@ -27,9 +27,9 @@ require_once 'lib/model/Rol.php';
 // -----------------------------
 class ConfigDB {
      const HOST     = "localhost";
-     const DB       = "escaners";
-     const USER     = "user1";
-     const PWD      = "secret";
+     const DB       = "$$$$$$$$$";
+     const USER     = "$$$$$$$$$";
+     const PWD      = "$$$$$$$$$";
      const CHARSET  = "utf8";
 }
 
@@ -38,7 +38,7 @@ class ConfigDB {
 //    FILE CONFIGURATION
 // -----------------------------
 class ConfigFS {
-    const PATH      = "./ftp_folders/";             //PATH a l'arrel dels escanejos
+    const PATH              = "./ftp_folders/";             //PATH a l'arrel dels escanejos
     const SCRIPT_FTP        =  "/serveis/ftp/createFTP.sh"; //Script que genera les carpetes amb els permisos adequats
     const SCRIPT_FIREWALL   = "/serveis/ftp/iptablesFTP.sh";//Script que fa la excepció al firewall per les IP de la taula
 }

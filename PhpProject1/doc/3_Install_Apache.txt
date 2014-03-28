@@ -47,9 +47,9 @@ Pugem tots els fitxers del projecte al directori corresponent: /serveis/www/data
 Modifico el fitxer lib/base_inc.php per als paràmetres de connexió del servidor mysql
     class ConfigDB {
          const HOST     = "localhost";
-         const DB       = "escaners";
-         const USER     = "web";
-         const PWD      = "Hj_87a";
+         const DB       = "$$$$$$$$$";
+         const USER     = "$$$$$$$$$";
+         const PWD      = "$$$$$$$$$";
          const CHARSET  = "utf8";
     }
 
