@@ -2,7 +2,7 @@ Aquest document conté tots els passos seguits per configurar la base de dades i
 
 ################################################################################
 Creem l'usuari web:
-    mysql> CREATE USER web IDENTIFIED BY 'Hj_87a'
+    mysql> CREATE USER web IDENTIFIED BY '$$$$$$$$$'
 Li donem els permisos bàsics:
     GRANT INSERT, DELETE, SELECT, UPDATE ON escaners.* TO web;
     FLUSH PRIVILEGES;
