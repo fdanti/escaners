@@ -1,4 +1,4 @@
-<div id="menu" name="menu">
+<div id="menu">
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td width="25%" onclick="admin(1);">Afegir escàner</td>
@@ -9,6 +9,6 @@
     </table>
 </div>
 
-<div id="contentadmin" name="contentadmin">
+<div id="contentadmin">
     <h3 style="text-align: center;">Benvingut a l'administració del servei d'escaneig de la UB. Selecciona una de les opcions del menú.</h3>
 </div>

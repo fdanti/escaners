@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <?php
     require_once './lib/base.inc.php';
 

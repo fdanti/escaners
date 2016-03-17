@@ -56,7 +56,7 @@
         <link rel="stylesheet" href="css/main.css" type="text/css">
         <title>Servidor d'escaneig de la UB</title>
         <script src="./lib/jquery/jquery-1.11.0.js"></script>
-        <script lang="javascript">
+        <script type="text/javascript">
             $(document).ready(function() {
                 <?php if(!$isadmin && $consulta){?>
                 $("#inforepo").load("./inforepo.php?idrepo=<?php echo $repositoris[0]->getId();?>");
@@ -138,7 +138,7 @@
         </script>
     </head>
     <body>
-        <div id="head" name="head">
+        <div id="head">
             <p style="text-align: right"><img src="./img/ub.jpg" style="height: 80px;" /></p>
             <h1>Servidor d'escaneig de la UB</h1>
             <?php if($existeix){?>
@@ -173,14 +173,14 @@
                         </td>
                     </tr>
                 </table>
-                <div id="inforepo" name="inforepo"></div>
+                <div id="inforepo"></div>
             </div>   
     <?php if(!$isadmin){?>
-            <div id="content" name="content"></div>
+            <div id="content"></div>
     <?php }else{?>   
             </div>
-            <div id="opcionsadmin" name="opcionsadmin"></div>
-            <div id="admin" name="admin"></div>
+            <div id="opcionsadmin"></div>
+            <div id="admin"></div>
     <?php }?>
             <?php }else{ ?>
             <h2>Aquest usuari no està a la base de dades. Contacta amb l'administrador.</h2>

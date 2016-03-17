@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <?php
 require_once './lib/base.inc.php';
 
@@ -25,7 +25,7 @@ closedir($dir);
 if(isset($data)){
     array_multisort($dates, SORT_DESC, $data);
     ?>
-                <div align="center">
+                <div style="text-align: center;">
                     <table width="90%" cellspacing="0" border="1">
                         <tr>
                             <td class="titoltaula" width="70%">Nom del fitxer:</td>
